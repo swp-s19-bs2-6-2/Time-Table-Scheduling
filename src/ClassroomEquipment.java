@@ -1,10 +1,8 @@
 public class ClassroomEquipment {
     public String name;
-    public String description; // Is it needed?
 
-    public ClassroomEquipment(String name, String description) {
+    public ClassroomEquipment(String name) {
         this.name = name;
-        this.description = description;
     }
 
     public String getName() {
@@ -15,11 +13,17 @@ public class ClassroomEquipment {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    /**
+     * Equals when names are equal
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ClassroomEquipment)){
+            return false;
+        }
+        ClassroomEquipment other = (ClassroomEquipment)obj;
+        return this.name.equals(other.name);
     }
 }
