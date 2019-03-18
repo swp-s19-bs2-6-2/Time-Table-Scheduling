@@ -11,7 +11,10 @@ public class TimeSlot implements Comparable{
 
 
     // Available classrooms during this time slot
-    private Set<Classroom> availableClassrooms;
+    private List<Classroom> availableClassrooms;
+
+    // Lessons during this time slot
+    private List<Lesson> lessons;
 
     public TimeSlot(Integer startHour, Integer startMinute, Integer endHour, Integer endMinute, Set<Classroom> availableClassrooms) {
         this.startHour = startHour;
@@ -51,11 +54,11 @@ public class TimeSlot implements Comparable{
 
     // Classrooms
 
-    public Set<Classroom> getAvailableClassrooms() {
+    public List<Classroom> getAvailableClassrooms() {
         return availableClassrooms;
     }
 
-    public void setAvailableClassrooms(Set<Classroom> availableClassrooms) {
+    public void setAvailableClassrooms(List<Classroom> availableClassrooms) {
         this.availableClassrooms = availableClassrooms;
     }
 
@@ -80,5 +83,19 @@ public class TimeSlot implements Comparable{
         }
         return this.startHour.compareTo(other.startHour);
     }
+
+    // Lessons
+
+    public set<Lesson> getLessons(){
+        return lessons;
+    }
+    public void setLessons(List<Lesson> lessons){
+        this.lessons = lessons;
+    }
+    public void addLesson(Lesson lesson){
+        lessons.add(Lesson);
+    }
+
+
 
 }

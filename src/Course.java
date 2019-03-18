@@ -3,8 +3,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Course {
-    // Types of classes (lecture, tutorial, e.t.c.) and amount
-    private Map<CourseClassType,  Integer> classTypes;
+    // Lessons of the course
+    private List<Lesson> lessons;
     // Order of classes
     private List<CourseClassType> classesOrder;
     // Groups of enrolled students
@@ -32,16 +32,12 @@ public class Course {
 
     // Class types
 
-    public Map<CourseClassType, Integer> getClassTypes() {
+    public List<Lesson> getClassTypes() {
         return classTypes;
     }
 
-    public void setClassTypes(Map<CourseClassType, Integer> classTypes) {
+    public void setClassTypes(List<Lesson> classTypes) {
         this.classTypes = classTypes;
-    }
-
-    public void putClassType(CourseClassType classType, Integer quantity) {
-        this.classTypes.put(classType, quantity);
     }
 
     // Enrolled students
@@ -57,4 +53,5 @@ public class Course {
     public void addEnrolledStudents(StudentsGroup enrolledStudents) {
         this.enrolledStudents.add(enrolledStudents);
     }
+
 }
