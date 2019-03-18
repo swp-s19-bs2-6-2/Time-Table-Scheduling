@@ -62,7 +62,8 @@ public class TimeTable {
     }
 
     private boolean canAddLesson(TimeSlot timeSlot, Lesson lesson) {
-        return true;
+        if(timeSlot.getAvailableClassrooms().size() > timeSlot.getLessons().size()) return true;
+        else return false;
     }
 
     private void addLesson(TimeSlot timeSlot, Lesson lesson) {
