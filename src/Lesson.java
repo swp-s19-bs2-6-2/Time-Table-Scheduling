@@ -11,7 +11,7 @@ public class Lesson{
         return this.courseClassType;
     }
     public void setCourseClassType(CourseClassType courseClassType){
-        this.CourseClassType = courseClassType;
+        this.courseClassType = courseClassType;
     }
 
     public Course getCourse(){
