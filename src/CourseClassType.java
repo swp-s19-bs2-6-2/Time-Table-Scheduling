@@ -3,15 +3,31 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class CourseClassType {
-    String name;    // Lecture, tutorial, e.t.c.
-    Boolean allStudents;
-    Map <ClassroomEquipment, Integer> requiredEquipment;
+    public String name;    // Lecture, tutorial, e.t.c.
+    public Boolean allStudents;
 
+    private Map <ClassroomEquipment, Integer> requiredEquipment;
 
     public CourseClassType(String name, Boolean allStudents) {
         this.name = name;
         this.allStudents = allStudents;
         this.requiredEquipment = new HashMap<>();
+    }
+
+    public CourseClassType(String name, Boolean allStudents, Map<ClassroomEquipment, Integer> requiredEquipment) {
+        this.name = name;
+        this.allStudents = allStudents;
+        this.requiredEquipment = requiredEquipment;
+    }
+
+    // Equipment manipulations
+
+    public Map<ClassroomEquipment, Integer> getRequiredEquipment() {
+        return requiredEquipment;
+    }
+
+    public void setRequiredEquipment(Map<ClassroomEquipment, Integer> requiredEquipment) {
+        this.requiredEquipment = requiredEquipment;
     }
 
     public boolean addNewEquipment(ClassroomEquipment equipment_type, int quantity){

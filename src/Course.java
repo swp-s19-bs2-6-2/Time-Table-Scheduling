@@ -3,12 +3,14 @@ import java.util.List;
 import java.util.Map;
 
 public class Course {
-    // Types of classes and amount
-    Map<CourseClassType,  Integer> classTypes;
+    // Lessons of the course
+    private List<Lesson> lessons;
     // Order of classes
-    List<CourseClassType> classesOrder;
+    private List<CourseClassType> classesOrder;
     // Groups of enrolled students
-    List<StudentsGroup> enrolledStudents;
+    private List<StudentsGroup> enrolledStudents;
+
+    // Class order
 
     boolean setClassesOrder(List<CourseClassType> order){
         Map<CourseClassType,  Integer> checkClassTypes = new HashMap<>();
@@ -23,4 +25,33 @@ public class Course {
         this.classesOrder = order;
         return true;
     }
+
+    public List<CourseClassType> getClassesOrder() {
+        return classesOrder;
+    }
+
+    // Class types
+
+    public List<Lesson> getClassTypes() {
+        return classTypes;
+    }
+
+    public void setClassTypes(List<Lesson> classTypes) {
+        this.classTypes = classTypes;
+    }
+
+    // Enrolled students
+
+    public List<StudentsGroup> getEnrolledStudents() {
+        return enrolledStudents;
+    }
+
+    public void setEnrolledStudents(List<StudentsGroup> enrolledStudents) {
+        this.enrolledStudents = enrolledStudents;
+    }
+
+    public void addEnrolledStudents(StudentsGroup enrolledStudents) {
+        this.enrolledStudents.add(enrolledStudents);
+    }
+
 }
