@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Classroom {
+public class Classroom implements Cloneable{
     public int capacity;
     private Map <ClassroomEquipment, Integer> equipment;    // <Equipment : Quantity>
 
@@ -59,5 +59,15 @@ public class Classroom {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+    public Classroom clone() throws CloneNotSupportedException {
+        Classroom clone = (Classroom)super.clone();
+        clone.equipment = (Map<ClassroomEquipment, Integer>) cloneEquipment(equipment);
+        return clone;
+    }
 
+    private Map<ClassroomEquipment, Integer> cloneEquipment(Map<ClassroomEquipment, Integer> equipment) throws CloneNotSupportedException {
+        Map<ClassroomEquipment, Integer> clone = new HashMap<ClassroomEquipment, Integer>();
+        //TODO: clone
+        return clone;
+    }
 }

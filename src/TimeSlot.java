@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class TimeSlot implements Comparable{
+public class TimeSlot implements Comparable, Cloneable {
     // Starting time
     public Integer startHour;
     public Integer startMinute;
@@ -31,14 +29,15 @@ public class TimeSlot implements Comparable{
         this.lessons = new ArrayList<>();
     }
 
-    public TimeSlot(int startHour, int startMinute, int endHour, int endMinute) {
+    public TimeSlot(int startHour, int startMinute, int endHour, int endMinute, List<Classroom> availableClassrooms) {
         this.startHour = startHour;
         this.startMinute = startMinute;
         this.endHour = endHour;
         this.endMinute = endMinute;
-        this.availableClassrooms = new ArrayList<>();
+        this.availableClassrooms = availableClassrooms;
         this.lessons = new ArrayList<>();
     }
+
 
     public TimeSlot(Integer startHour, Integer startMinute, Integer endHour, Integer endMinute, List<Classroom> availableClassrooms, List<Lesson> lessons) {
         this.startHour = startHour;
@@ -90,7 +89,7 @@ public class TimeSlot implements Comparable{
     public void addLesson(Lesson lesson){
         lessons.add(lesson);
     }
-
+    public void removeLesson(Lesson lesson){ lessons.remove(lesson); }
 
     /**
      * Compares to other time slot using start hour and start minute
@@ -116,5 +115,27 @@ public class TimeSlot implements Comparable{
                 '}';
     }
 
+    public TimeSlot clone() throws CloneNotSupportedException{
+        TimeSlot clone = (TimeSlot)super.clone();
+        clone.lessons = (List<Lesson>) cloneLessons(lessons);
+        clone.availableClassrooms = (List<Classroom>)cloneClassrooms(availableClassrooms);
+        return clone;
+    }
+
+    private List<Classroom> cloneClassrooms(List<Classroom> availableClassrooms) throws CloneNotSupportedException {
+        List<Classroom> clone = new ArrayList<>();
+        for(int i = 0; i<availableClassrooms.size(); i++){
+            clone.add(availableClassrooms.get(i).clone());
+        }
+        return clone;
+    }
+
+    private List<Lesson> cloneLessons(List<Lesson> lessons) throws CloneNotSupportedException {
+        List<Lesson> clone = new ArrayList<>();
+        for(int i = 0; i<lessons.size(); i++){
+            clone.add(lessons.get(i).clone());
+        }
+        return clone;
+    }
 
 }

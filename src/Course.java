@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Course {
+public class Course implements Cloneable{
 
     // Lessons of the course
 //    private List<Lesson> lessons;   // TODO : decide to keep or replace
@@ -9,6 +9,11 @@ public class Course {
     private List<CourseClassType> classesOrder;
     // Groups of enrolled students
     private List<StudentsGroup> enrolledStudents;
+
+    public String courseName;
+    public Course(String courseName){
+        this.courseName = courseName;
+    }
 
     // Class order
 
@@ -70,6 +75,19 @@ public class Course {
 
     public void addEnrolledStudents(StudentsGroup enrolledStudents) {
         this.enrolledStudents.add(enrolledStudents);
+    }
+
+    public Course clone() throws CloneNotSupportedException {
+        Course clone = (Course) super.clone();
+        clone.classTypes = (Map<CourseClassType, Integer>) cloneClassTypes(classTypes);
+        //TODO: need to clone other attributes
+        return clone;
+    }
+
+    private Map<CourseClassType, Integer> cloneClassTypes(Map<CourseClassType, Integer> classTypes) throws CloneNotSupportedException {
+        Map<CourseClassType, Integer> clone = new HashMap<>();
+        //TODO: need to clone of CourseClassType inside Map
+        return clone;
     }
 
     // Lessons

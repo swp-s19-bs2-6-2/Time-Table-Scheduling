@@ -1,4 +1,4 @@
-public class ClassroomEquipment {
+public class ClassroomEquipment implements Cloneable{
     public String name;
 
     public ClassroomEquipment(String name) {
@@ -25,5 +25,10 @@ public class ClassroomEquipment {
         }
         ClassroomEquipment other = (ClassroomEquipment)obj;
         return this.name.equals(other.name);
+    }
+
+    public ClassroomEquipment clone() throws CloneNotSupportedException {
+        ClassroomEquipment clone = (ClassroomEquipment)super.clone();
+        return clone;
     }
 }
