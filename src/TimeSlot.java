@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TimeSlot implements Comparable{
@@ -16,48 +18,38 @@ public class TimeSlot implements Comparable{
     // Lessons during this time slot
     private List<Lesson> lessons;
 
-    public TimeSlot(Integer startHour, Integer startMinute, Integer endHour, Integer endMinute, Set<Classroom> availableClassrooms) {
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.availableClassrooms = availableClassrooms;
-    }
-
-    public TimeSlot(Integer startHour, Integer startMinute, Integer endHour, Integer endMinute) {
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.availableClassrooms = new HashSet<>();
-    }
-
+    /**
+     * Create new object using "other". Copies all besides lessons
+     * @param other
+     */
     public TimeSlot(TimeSlot other) {
         this.startHour = other.startHour;
         this.startMinute = other.startMinute;
         this.endHour = other.endHour;
         this.endMinute = other.endMinute;
-        this.availableClassrooms = new HashSet<>(other.availableClassrooms);
+        this.availableClassrooms = new ArrayList<>(other.availableClassrooms);
+        this.lessons = new ArrayList<>();
     }
-
-    // Time
 
     public TimeSlot(int startHour, int startMinute, int endHour, int endMinute) {
         this.startHour = startHour;
         this.startMinute = startMinute;
         this.endHour = endHour;
         this.endMinute = endMinute;
+        this.availableClassrooms = new ArrayList<>();
+        this.lessons = new ArrayList<>();
     }
 
-    @Override
-    public String toString() {
-        return "TimeSlot{" +
-                "startHour=" + startHour +
-                ", startMinute=" + startMinute +
-                ", endHour=" + endHour +
-                ", endMinute=" + endMinute +
-                '}';
+    public TimeSlot(Integer startHour, Integer startMinute, Integer endHour, Integer endMinute, List<Classroom> availableClassrooms, List<Lesson> lessons) {
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        this.availableClassrooms = availableClassrooms;
+        this.lessons = lessons;
     }
+
+    // Time
 
     public void setStartTime(int startHour, int startMinute){
         this.startHour = startHour;
@@ -87,6 +79,19 @@ public class TimeSlot implements Comparable{
         availableClassrooms.remove(classroom);
     }
 
+    // Lessons
+
+    public List<Lesson> getLessons(){
+        return lessons;
+    }
+    public void setLessons(List<Lesson> lessons){
+        this.lessons = lessons;
+    }
+    public void addLesson(Lesson lesson){
+        lessons.add(lesson);
+    }
+
+
     /**
      * Compares to other time slot using start hour and start minute
      * @param o
@@ -101,18 +106,15 @@ public class TimeSlot implements Comparable{
         return this.startHour.compareTo(other.startHour);
     }
 
-    // Lessons
-
-    public set<Lesson> getLessons(){
-        return lessons;
+    @Override
+    public String toString() {
+        return "TimeSlot{" +
+                "startHour=" + startHour +
+                ", startMinute=" + startMinute +
+                ", endHour=" + endHour +
+                ", endMinute=" + endMinute +
+                '}';
     }
-    public void setLessons(List<Lesson> lessons){
-        this.lessons = lessons;
-    }
-    public void addLesson(Lesson lesson){
-        lessons.add(Lesson);
-    }
-
 
 
 }

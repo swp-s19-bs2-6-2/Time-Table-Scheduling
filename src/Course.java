@@ -1,10 +1,10 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Course {
+
     // Lessons of the course
-    private List<Lesson> lessons;
+//    private List<Lesson> lessons;   // TODO : decide to keep or replace
+    private  Map<CourseClassType, Integer> classTypes;
     // Order of classes
     private List<CourseClassType> classesOrder;
     // Groups of enrolled students
@@ -26,19 +26,37 @@ public class Course {
         return true;
     }
 
+//    boolean setClassesOrder(List<CourseClassType> order){
+//        // Getting class types
+//        Set<CourseClassType> classTypes = new HashSet<>();
+//        for (Lesson lesson :lessons) {
+//            classTypes.add(lesson.getCourseClassType());
+//        }
+//        // Comparing correspondence
+//        for (CourseClassType classType : order){
+//            if (!classTypes.contains(classType)){
+//                return false;
+//            }
+//        }
+//        this.classesOrder = order;
+//        return true;
+//    }
+
     public List<CourseClassType> getClassesOrder() {
         return classesOrder;
     }
 
-    // Class types
+//    // Class types
+//
+//    public List<Lesson> getClassTypes() {
+//        return classTypes;
+//    }
+//
+//    public void setClassTypes(List<Lesson> classTypes) {
+//        this.classTypes = classTypes;
+//    }
 
-    public List<Lesson> getClassTypes() {
-        return classTypes;
-    }
 
-    public void setClassTypes(List<Lesson> classTypes) {
-        this.classTypes = classTypes;
-    }
 
     // Enrolled students
 
@@ -54,4 +72,56 @@ public class Course {
         this.enrolledStudents.add(enrolledStudents);
     }
 
+    // Lessons
+
+//    public List<Lesson> getLessons() {
+//        return lessons;
+//    }
+//
+//    public boolean setLessons(List<Lesson> lessons) {
+//        // Checking course and order
+//        if (this.classesOrder.size() > 0) {
+//            Iterator<CourseClassType> orderIterator = this.classesOrder.iterator();
+//            CourseClassType currentClassType = orderIterator.next();
+//            int groupsAmount = this.enrolledStudents.size();
+//            int groupsHadClass = 0;
+//
+//            for (Lesson lesson : lessons){
+//                if (lesson.getCourse() != this){
+//                    return false;
+//                }
+//                // checking if number of groups corresponds to number of classes if no "allStudents"
+//                if (!currentClassType.allStudents){
+//                    groupsHadClass++;
+//                }
+//                if (currentClassType != lesson.getCourseClassType()){
+//                    if (!orderIterator.hasNext()){
+//                        return false;
+//                    } else {
+//                        // If number of labs doesn't correspond to number of groups
+//                        if (!currentClassType.allStudents){
+//                            if (groupsHadClass % groupsAmount != 0){
+//                                return false;
+//                            }
+//                        }
+//
+//                        currentClassType = orderIterator.next();
+//                        if (currentClassType != lesson.getCourseClassType()){
+//                            return false;
+//                        }
+//                        groupsHadClass = 0;
+//                    }
+//                }
+//            }
+//
+//            if (!currentClassType.allStudents){
+//                if (groupsHadClass % groupsAmount != 0){
+//                    return false;
+//                }
+//            }
+//        }
+//        // If order is ok
+//        this.lessons = lessons;
+//        return true;
+//    }
 }
