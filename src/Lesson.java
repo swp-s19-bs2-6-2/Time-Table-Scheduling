@@ -6,6 +6,7 @@ public class Lesson{
     // time slot of the lesson
     private TimeSlot timeSlot;
 
+
     public CourseClassType getCourseClassType(){
         return this.courseClassType;
     }
