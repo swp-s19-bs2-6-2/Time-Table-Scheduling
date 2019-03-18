@@ -10,6 +10,23 @@ public class TimeSlot implements Comparable{
     // Available classrooms during this time slot
     private Set<Classroom> availableClassrooms;
 
+    public TimeSlot(int startHour, int startMinute, int endHour, int endMinute) {
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+    }
+
+    @Override
+    public String toString() {
+        return "TimeSlot{" +
+                "startHour=" + startHour +
+                ", startMinute=" + startMinute +
+                ", endHour=" + endHour +
+                ", endMinute=" + endMinute +
+                '}';
+    }
+
     public void setStartTime(int startHour, int startMinute){
         this.startHour = startHour;
         this.startMinute = startMinute;
