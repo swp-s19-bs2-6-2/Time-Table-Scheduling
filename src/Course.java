@@ -80,13 +80,35 @@ public class Course implements Cloneable{
     public Course clone() throws CloneNotSupportedException {
         Course clone = (Course) super.clone();
         clone.classTypes = (Map<CourseClassType, Integer>) cloneClassTypes(classTypes);
+        clone.classesOrder = cloneClassesOrder(classesOrder);
+        //clone.enrolledStudents = cloneEnrolledStudents(enrolledStudents);
         //TODO: need to clone other attributes
+        return clone;
+    }
+
+    private List<StudentsGroup> cloneEnrolledStudents(List<StudentsGroup> enrolledStudents) {
+        List<StudentsGroup> clone = new ArrayList<>();
+        for(int i = 0; i<enrolledStudents.size(); i++){
+            clone.add(enrolledStudents.get(i).clone());
+        }
+        return clone;
+    }
+
+    private List<CourseClassType> cloneClassesOrder(List<CourseClassType> classesOrder) throws CloneNotSupportedException {
+        List<CourseClassType> clone = new ArrayList<>();
+        for(int i = 0; i<classesOrder.size(); i++){
+            clone.add(classesOrder.get(i).clone());
+        }
         return clone;
     }
 
     private Map<CourseClassType, Integer> cloneClassTypes(Map<CourseClassType, Integer> classTypes) throws CloneNotSupportedException {
         Map<CourseClassType, Integer> clone = new HashMap<>();
-        //TODO: need to clone of CourseClassType inside Map
+        Iterator<Map.Entry<CourseClassType, Integer>> iterator = classTypes.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry<CourseClassType, Integer> pair = iterator.next();
+            clone.put(pair.getKey().clone(), pair.getValue());
+        }
         return clone;
     }
 

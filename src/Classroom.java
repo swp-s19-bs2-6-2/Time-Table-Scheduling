@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Classroom implements Cloneable{
@@ -67,7 +68,11 @@ public class Classroom implements Cloneable{
 
     private Map<ClassroomEquipment, Integer> cloneEquipment(Map<ClassroomEquipment, Integer> equipment) throws CloneNotSupportedException {
         Map<ClassroomEquipment, Integer> clone = new HashMap<ClassroomEquipment, Integer>();
-        //TODO: clone
+        Iterator<Map.Entry<ClassroomEquipment, Integer>> iterator = equipment.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry<ClassroomEquipment, Integer> pair = iterator.next();
+            clone.put(pair.getKey().clone(), pair.getValue());
+        }
         return clone;
     }
 }

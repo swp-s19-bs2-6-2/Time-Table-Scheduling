@@ -80,4 +80,8 @@ public class StudentsGroup {
             }
         }
     }
+    /*public StudentsGroup clone() throws CloneNotSupportedException {
+        StudentsGroup clone = (StudentsGroup) super.clone();
+
+    }*/
 }

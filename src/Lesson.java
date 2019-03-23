@@ -3,6 +3,7 @@ public class Lesson implements Cloneable{
     private CourseClassType courseClassType;
     // course of the lesson
     private Course course;
+
     // time slot of the lesson
     //private TimeSlot timeSlot; TODO : decide to keep or replace
 
@@ -28,7 +29,7 @@ public class Lesson implements Cloneable{
      public Lesson clone() throws CloneNotSupportedException{
          Lesson clone = (Lesson)super.clone();
          clone.course = (Course) course.clone();
-         //TODO: clone courseClassType
+         clone.courseClassType = (CourseClassType)courseClassType.clone();
          return clone;
      }
 }
