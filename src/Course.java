@@ -86,10 +86,10 @@ public class Course implements Cloneable{
         return clone;
     }
 
-    private List<StudentsGroup> cloneEnrolledStudents(List<StudentsGroup> enrolledStudents) {
+    private List<StudentsGroup> cloneEnrolledStudents(List<StudentsGroup> enrolledStudents) throws CloneNotSupportedException {
         List<StudentsGroup> clone = new ArrayList<>();
         for(int i = 0; i<enrolledStudents.size(); i++){
-            clone.add(enrolledStudents.get(i).clone());
+            clone.add((StudentsGroup) enrolledStudents.get(i).clone());
         }
         return clone;
     }

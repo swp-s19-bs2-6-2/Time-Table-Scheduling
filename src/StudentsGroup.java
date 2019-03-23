@@ -1,87 +1,113 @@
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-public class StudentsGroup {
-    // TODO : Probably groups can intersect which can affect its workload
-    // TODO : Should we identify group uniquely by its name?
+/**
+ * Represents group of students.
+ * It is possible to set which of N students will be in the group. However need to assign to each student ID from 0 to N-1
+ */
+public class StudentsGroup implements Cloneable{
 
     // Group name
     public String name;
-    // Parent group (For example 1st year bach)
-    private List<StudentsGroup> parentGroups;
-    // Subgroups
-    private List<StudentsGroup> subgroups;
+    // Amount of students in the group
+    private int studentsNumber;
+    // BitSet (bitmap) containing information about students
+    private BitSet students;
 
-    public StudentsGroup(String name) {
-        this.name = name;
-        this.parentGroups = new ArrayList<StudentsGroup>();
-        this.subgroups = new ArrayList<StudentsGroup>();
+
+
+    // Constructors
+    public StudentsGroup(int studentsNumber){
+        this.studentsNumber = studentsNumber;
+        this.students = new BitSet(studentsNumber);
     }
 
-    public StudentsGroup(String name, List<StudentsGroup> parentGroups, List<StudentsGroup> subgroups) {
-        this.name = name;
-        this.parentGroups = parentGroups;
-        this.subgroups = subgroups;
+    public StudentsGroup(BitSet students){
+        this.studentsNumber = students.size();
+        this.students = students;
     }
 
-    // Name
+    // Getters and setters
 
-    public String getName() {
-        return name;
+    /**
+     * Get maximum number of students (number of all students in the university)
+     * @return
+     */
+    public int getMaxStudentsNumber() {
+        return this.studentsNumber;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Get number of students in the current group
+     * @return
+     */
+    public int getStudentsNumber() {
+        return this.students.cardinality();
     }
 
-    public List<StudentsGroup> getParentGroups() {
-        return parentGroups;
+    // Set operations
+
+    /**
+     * Checks if groups are intersecting
+     * @param other
+     * @return True if intersects and false otherwise.
+     */
+    public boolean intersect(StudentsGroup other){
+        return students.intersects(other.students);
     }
 
-    // Parent groups
+    // Students operations
 
-    public void setParentGroups(List<StudentsGroup> parentGroups) {
-        this.parentGroups = parentGroups;
+    /**
+     * Add student with specified ID to this group
+     * @param studentID
+     * @return True if operations is succeed and false otherwise
+     */
+    public boolean addStudent(int studentID){
+        if (studentID >= this.studentsNumber || studentID < 0){
+            return false;
+        }
+        students.set(studentID);
+        return true;
     }
 
-    public void addParentGroup(StudentsGroup parent) {
-        this.parentGroups.add(parent);
-        parent.subgroups.add(this);
-    }
-
-    public void removeParentGroup(String name) {
-        for (StudentsGroup group : subgroups) {
-            if (group.name.equals(name)) {
-                subgroups.remove(group);
+    /**
+     * Add all students with specified IDs from iterable to this group
+     * @param studentIDs
+     * @return True if operations is succeed and false otherwise
+     */
+    public boolean addStudents(Iterable <Integer> studentIDs){
+        Iterator <Integer> iter = studentIDs.iterator();
+        while (iter.hasNext()){
+            int curr = iter.next();
+            if (curr >= this.studentsNumber || curr < 0){
+                return false;
             }
         }
-    }
-
-    // Sub groups
-
-    public List<StudentsGroup> getSubgroups() {
-        return subgroups;
-    }
-
-    public void setSubgroups(List<StudentsGroup> subgroups) {
-        this.subgroups = subgroups;
-    }
-
-    public void createSubGroup(String name) {
-        subgroups.add(new StudentsGroup(name, new ArrayList<StudentsGroup>(Arrays.asList(this)), new ArrayList<>()));
-    }
-
-    public void removeSubGroup(String name) {
-        for (StudentsGroup group : subgroups) {
-            if (group.name.equals(name)) {
-                subgroups.remove(group);
-            }
+        iter = studentIDs.iterator();
+        while (iter.hasNext()){
+            students.set(iter.next());
         }
+        return true;
     }
-    /*public StudentsGroup clone() throws CloneNotSupportedException {
-        StudentsGroup clone = (StudentsGroup) super.clone();
 
-    }*/
+    /**
+     * Updates values for all students using BitSet
+     * @param students
+     * @return True if operations is succeed and false otherwise
+     */
+    public boolean updateStudents(BitSet students){
+        if (students.size() != studentsNumber){
+            return false;
+        }
+        this.students = students;
+        return true;
+    }
+
+    // Other methods (interfaces and utilities)
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new StudentsGroup((BitSet) this.students.clone());
+    }
 }
