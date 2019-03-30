@@ -1,3 +1,5 @@
+import javax.xml.stream.FactoryConfigurationError;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.*;
 
 public class Course implements Cloneable{
@@ -9,10 +11,62 @@ public class Course implements Cloneable{
     private List<CourseClassType> classesOrder;
     // Groups of enrolled students
     private List<StudentsGroup> enrolledStudents;
-
+    // Teachers for this course with taught classes and amount
+    private Map<Teacher, Map<CourseClassType, Integer>> teachersMap;
     public String courseName;
+
+    // Constructor
+
     public Course(String courseName){
+        this.classTypes = new HashMap<>();
+        this.classesOrder = new ArrayList<>();
+        this.enrolledStudents = new ArrayList<>();
+        this.teachersMap = new HashMap<>();
         this.courseName = courseName;
+
+    }
+
+    // Teachers
+
+    private boolean isTeachersMapConsistent(Map<Teacher, Map<CourseClassType, Integer>> teachersMap){
+        Map<CourseClassType, Integer> assignedClassTypes = new HashMap<>();
+        for (Map.Entry<Teacher, Map<CourseClassType, Integer>> teacher : teachersMap.entrySet()){
+            assignedClassTypes.putAll(teacher.getValue());
+        }
+        // Comparing values in assignedClassTypes and this.classTypes TODO : Implement and test with .equals()
+        for (CourseClassType key : this.classTypes.keySet()){
+            if (!assignedClassTypes.containsKey(key)){
+                return false;
+            }
+            if (!assignedClassTypes.get(key).equals(this.classTypes.get(key))){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Map<Teacher, Map<CourseClassType, Integer>> getTeachersMap() {
+        return teachersMap;
+    }
+
+    public boolean setTeachersMap(Map<Teacher, Map<CourseClassType, Integer>> teachersMap) {
+        if (!isTeachersMapConsistent(teachersMap)){
+            return false;
+        }
+        this.teachersMap = teachersMap;
+        return true;
+    }
+
+    public void addTeacher(Teacher teacher, Map<CourseClassType, Integer> assignedClasses){
+        this.teachersMap.put(teacher, assignedClasses);
+    }
+
+    public void assignClassToTeacher(Teacher teacher, CourseClassType classType, int amount){
+        // TODO : add validation
+        if (!this.teachersMap.containsKey(teacher)){
+            this.teachersMap.put(teacher, new HashMap<>());
+        }
+        this.teachersMap.get(teacher).put(classType, amount);
     }
 
     // Class order
