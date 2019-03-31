@@ -15,7 +15,15 @@ public class Course implements Cloneable{
     private Map<Teacher, Map<CourseClassType, Integer>> teachersMap;
     public String courseName;
 
-    // Constructor
+    // Constructors
+
+    public Course(Map<CourseClassType, Integer> classTypes, List<CourseClassType> classesOrder, List<StudentsGroup> enrolledStudents, Map<Teacher, Map<CourseClassType, Integer>> teachersMap, String courseName) {
+        this.classTypes = classTypes;
+        this.classesOrder = classesOrder;
+        this.enrolledStudents = enrolledStudents;
+        this.teachersMap = teachersMap;
+        this.courseName = courseName;
+    }
 
     public Course(String courseName){
         this.classTypes = new HashMap<>();
