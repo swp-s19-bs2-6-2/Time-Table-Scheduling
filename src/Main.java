@@ -1,19 +1,10 @@
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 
 public class Main {
 
 
     public static void main(String[] args) throws CloneNotSupportedException, IOException, Parser.IncorrectFileStructureException {
-        List<Lesson> l = Parser.getLessons(new Parser(new FileInputStream("courses.csv")));
-
-        List<Classroom> c = Parser.getClassRooms(new Parser(new FileInputStream("classrooms.csv")));
-
-        List<TimeSlot> s = Parser.getTimeSlots(new Parser(new FileInputStream("timeSlots.csv")), c);
-
-        TimeTable timeTable = new TimeTable(s, 5, l);
-        timeTable.printTimeTable();
+        Parser.test();
 
         /*List<Lesson> availableLessons = new ArrayList<>();
         for(int i = 0; i<3; i++){

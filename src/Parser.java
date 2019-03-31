@@ -1,49 +1,117 @@
 import com.opencsv.CSVReader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.nio.file.NotDirectoryException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
 public class Parser
 {
-    private InputStream is;
+    //ToDo: Check if data is duplicates
+    private static final String STUDENTS_FILE_NAME = "Students.csv";
+    private static final String COURSES_FILE_NAME = "Courses.csv";
+    public final String[] FILES = {STUDENTS_FILE_NAME, COURSES_FILE_NAME};
 
-    public Parser(InputStream file){
-        is = file;
-    }
-
-    public List<String[]> parse(){
-        try(CSVReader cr = new CSVReader(new BufferedReader(new InputStreamReader(is)))) {
-            return cr.readAll()
-                    .stream()
-                    .map( s -> Stream.of(s)
-                            .map(String::trim)
-                            .toArray(String[]::new) )
-                    .collect(Collectors.toList());
-
-        }catch (IOException e){
+    private final static String DIR = "data";
+    public static void test(){
+        try {
+            Parser p = new Parser();
+            p.parseAll(new File(DIR));
+        }catch (Exception e){
             e.printStackTrace();
+            System.out.println(e.getMessage());
             System.exit(1);
-            return null;
         }
     }
 
-    static class IncorrectFileStructureException extends Exception{
-        IncorrectFileStructureException(String message){super(message);}
-        IncorrectFileStructureException(int line, String message){
-            super("Incorrect file format: "+message+"\nline: "+line);
-        }
+
+
+    //ToDo: return type
+    //ToDO: rework
+    public void parseAll(File WD) throws NotDirectoryException, FileNotFoundException, IncorrectFileStructureException {
+        validate(WD);
+        List<StudentsGroup> groups = parseGroups(new FileInputStream(WD.getPath() + File.separator + STUDENTS_FILE_NAME));
+        for (StudentsGroup g: groups)
+            System.out.println(g);
+        List<Course> courses = parseCourses(new FileInputStream(WD.getPath() + File.separator + COURSES_FILE_NAME));
+        for (Course c: courses)
+            System.out.println(c.courseName);
     }
 
-    public static List<Classroom> getClassRooms(Parser p) throws IncorrectFileStructureException{
-        List<String[]> lines = p.parse();
+    public List<Course> parseCourses(final InputStream groupFiles) throws IncorrectFileStructureException{
+        final List<String[]> lines = parse(groupFiles);
+
+        final List<Course> toReturn = new ArrayList<>();
+        int ln = 0;//lines for error
+        for (String[] line: lines){
+            if (line.length >1) throw new IncorrectFileStructureException(ln, "Should contain only course name");
+            toReturn.add(new Course(line[0]));
+            ln++;
+        }
+        return toReturn;
+    }
+
+    public List<StudentsGroup> parseGroups(final InputStream studentsFile) throws IncorrectFileStructureException{
+        final List<String[]> lines = parse(studentsFile);
+        final int studentsNumber = lines.size();
+
+        final Map<String, StudentsGroup> years = new HashMap<>();
+        final Map<String, StudentsGroup> groups = new HashMap<>();
+
+        int id = 0;//current student ID
+        for (String[] line: lines){
+            if (line.length != 3) throw new IncorrectFileStructureException(id, "Should be in form of [Name, BS, Group]");
+
+            final String name = line[0];
+            final String grade = line[1];
+            final String studentGroup = line[1]+"-"+line[2];
+
+            if (!years.containsKey(grade)){
+                years.put(grade, new StudentsGroup(grade, studentsNumber));
+            }
+            years.get(grade).addStudent(id);
+
+            if (!groups.containsKey(studentGroup)){
+                groups.put(studentGroup, new StudentsGroup(studentGroup, studentsNumber));
+            }
+            groups.get(studentGroup).addStudent(id);
+
+            id++;
+        }
+        List<StudentsGroup> toReturn = new ArrayList<>();
+        toReturn.addAll(years.values());
+        toReturn.addAll(groups.values());
+        return toReturn;
+    }
+
+
+
+
+    public void validate(final File WD) throws NotDirectoryException, FileNotFoundException{
+        if (!WD.exists()) throw new FileNotFoundException("Directory not found: "+WD.getAbsolutePath());
+        if (WD.isFile()) throw new NotDirectoryException(WD.getAbsolutePath()+" is not a directory.");
+
+        String[] fls = WD.list();
+        fls = fls == null? new String[]{} : fls;
+        final List<String> files = Arrays.asList(fls);
+
+        final List<String> notFoundFiles = new LinkedList<>();
+        for (String f: FILES) {
+            if (!files.contains(f))
+                notFoundFiles.add(f);
+        }
+        if(!notFoundFiles.isEmpty()) throw new FileNotFoundException("There are no files "+notFoundFiles+" in working directory "+WD.getAbsolutePath());
+    }
+
+
+
+
+
+    //ToDo: Rewrite
+    /*public List<Classroom> getClassRooms(Parser p) throws IncorrectFileStructureException{
+        List<String[]> lines = parse();
         List<Classroom> classes = new ArrayList<>();
 
         int l = 0;//Line number for the exception
@@ -62,8 +130,8 @@ public class Parser
         return classes;
     }
 
-    public static List<TimeSlot> getTimeSlots(Parser p, List<Classroom> availableClassrooms) throws IncorrectFileStructureException {
-        List<String[]> lines = p.parse();
+    public List<TimeSlot> getTimeSlots(Parser p, List<Classroom> availableClassrooms) throws IncorrectFileStructureException {
+        List<String[]> lines = parse();
         List<TimeSlot> slots = new ArrayList<>();
 
         int l = 0;//line of error
@@ -85,8 +153,8 @@ public class Parser
         return slots;
     }
 
-    public static List<Lesson> getLessons(Parser p) throws IncorrectFileStructureException {
-        List<String[]> lines = p.parse();
+    public List<Lesson> getLessons() throws IncorrectFileStructureException {
+        List<String[]> lines = parse();
         List<Lesson> lessons = new ArrayList<>();
         for (String[] line: lines){
             Course c = new Course(line[0]); // Course name
@@ -97,5 +165,32 @@ public class Parser
             }
         }
         return lessons;
+    }*/
+
+
+
+    private List<String[]> parse(InputStream f){
+        try(CSVReader cr = new CSVReader(new BufferedReader(new InputStreamReader(f)))) {
+            return cr.readAll()
+                    .stream()
+                    .map( s -> Stream.of(s)
+                            .map(String::trim)
+                            .toArray(String[]::new) )
+                    .collect(Collectors.toList());
+
+        }catch (IOException e){
+            e.printStackTrace();
+            System.exit(1);
+            return null;
+        }
+    }
+
+
+
+    static class IncorrectFileStructureException extends Exception{
+        IncorrectFileStructureException(String message){super(message);}
+        IncorrectFileStructureException(int line, String message){
+            super("Incorrect file format: "+message+"\nline: "+line);
+        }
     }
 }
