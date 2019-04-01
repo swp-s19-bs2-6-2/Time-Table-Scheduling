@@ -1,10 +1,24 @@
+import java.io.File;
 import java.io.IOException;
 
 public class Main {
 
 
+    private final static String DIR = "data";
+    private static void test(){
+        try {
+            Parser p = new Parser();
+            Parser.TableResult r = p.parseAll(new File(DIR));
+            new TimeTable(r.getTimeSlots(), 5, r.getLessons()).printTimeTable();
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+
     public static void main(String[] args) throws CloneNotSupportedException, IOException, Parser.IncorrectFileStructureException {
-        Parser.test();
+        test();
 
         /*List<Lesson> availableLessons = new ArrayList<>();
         for(int i = 0; i<3; i++){

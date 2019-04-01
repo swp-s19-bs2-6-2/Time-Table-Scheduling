@@ -13,7 +13,7 @@ public class TimeSlot implements Comparable, Cloneable {
     // Available classrooms during this time slot
     private List<Classroom> availableClassrooms;
 
-    // Lessons during this time slot
+    // Lessons.csv during this time slot
     private List<Lesson> lessons;
 
     /**
@@ -78,7 +78,7 @@ public class TimeSlot implements Comparable, Cloneable {
         availableClassrooms.remove(classroom);
     }
 
-    // Lessons
+    // Lessons.csv
 
     public List<Lesson> getLessons(){
         return lessons;

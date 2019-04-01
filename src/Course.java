@@ -1,10 +1,8 @@
-import javax.xml.stream.FactoryConfigurationError;
-import java.nio.file.FileAlreadyExistsException;
 import java.util.*;
 
 public class Course implements Cloneable{
 
-    // Lessons of the course
+    // Lessons.csv of the course
 //    private List<Lesson> lessons;   // TODO : decide to keep or replace
     private  Map<CourseClassType, Integer> classTypes;
     // Order of classes
@@ -176,7 +174,7 @@ public class Course implements Cloneable{
         return clone;
     }
 
-    // Lessons
+    // Lessons.csv
 
 //    public List<Lesson> getLessons() {
 //        return lessons;
