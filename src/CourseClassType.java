@@ -1,7 +1,7 @@
 import java.util.Map;
 
 public class CourseClassType implements Cloneable{
-    public String name;    // Lecture, tutorial, e.t.course.
+    public String name;    // Lecture, tutorial, e.t.c.
     public Boolean allStudents;
 
 

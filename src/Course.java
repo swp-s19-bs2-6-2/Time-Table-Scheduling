@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Course implements Cloneable{
 
-    // Lessons.csv of the course
+    // Lessons of the course
 //    private List<Lesson> lessons;   // TODO : decide to keep or replace
     private  Map<CourseClassType, Integer> classTypes;
     // Order of classes
@@ -174,7 +174,7 @@ public class Course implements Cloneable{
         return clone;
     }
 
-    // Lessons.csv
+    // Lessons
 
 //    public List<Lesson> getLessons() {
 //        return lessons;
