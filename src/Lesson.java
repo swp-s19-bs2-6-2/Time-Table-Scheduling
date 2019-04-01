@@ -7,6 +7,8 @@ public class Lesson implements Cloneable {
     private Teacher assignedTeacher;
     // group for this lesson
     private StudentsGroup assignedGroup;
+    // classroom
+    private Classroom classroom;
 
     // time slot of the lesson
     private TimeSlot timeSlot;
@@ -82,6 +84,16 @@ public class Lesson implements Cloneable {
 
     public void setAssignedGroup(StudentsGroup assignedGroup) {
         this.assignedGroup = assignedGroup;
+    }
+
+    // Classroom
+
+    public Classroom getClassroom() {
+        return classroom;
+    }
+
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
     }
 
     // Assigned teacher operations
