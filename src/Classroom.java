@@ -3,16 +3,19 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Classroom implements Cloneable{
+    private String name;
     public int capacity;
     private Map <ClassroomEquipment, Integer> equipment;    // <Equipment : Quantity>
 
 
-    public Classroom(int capacity) {
+    public Classroom(String name, int capacity) {
+        this.name = name;
         this.capacity = capacity;
         this.equipment = new HashMap<>();
     }
 
-    public Classroom(int capacity, Map<ClassroomEquipment, Integer> equipment) {
+    public Classroom(String name, int capacity, Map<ClassroomEquipment, Integer> equipment) {
+        this.name = name;
         this.capacity = capacity;
         this.equipment = equipment;
     }
@@ -74,5 +77,19 @@ public class Classroom implements Cloneable{
             clone.put(pair.getKey().clone(), pair.getValue());
         }
         return clone;
+    }
+
+    // Name operations
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Classroom{" +
+                "capacity=" + capacity +
+                ", equipment=" + equipment +
+                '}';
     }
 }
