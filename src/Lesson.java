@@ -107,6 +107,8 @@ public class Lesson implements Cloneable {
         return "Lesson{" +
                 "courseClassType=" + courseClassType +
                 ", course=" + course +
+                ", assignedTeacher=" + assignedTeacher +
+                ", assignedGroup=" + assignedGroup +
                 ", timeSlot=" + timeSlot +
                 '}';
     }
