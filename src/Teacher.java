@@ -78,4 +78,13 @@ public class Teacher {
         preferredTimeslots.add(timeSlot);
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "teacherID=" + teacherID +
+                ", name='" + name + '\'' +
+                ", preferredTimeslots=" + preferredTimeslots +
+                '}';
+    }
 }

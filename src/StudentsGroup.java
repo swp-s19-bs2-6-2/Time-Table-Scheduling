@@ -112,4 +112,13 @@ public class StudentsGroup implements Cloneable{
     public Object clone() throws CloneNotSupportedException {
         return new StudentsGroup(this.name, (BitSet) this.students.clone());
     }
+
+    @Override
+    public String toString() {
+        return "StudentsGroup{" +
+                "name='" + name + '\'' +
+                ", studentsNumber=" + studentsNumber +
+                ", students=" + students +
+                '}';
+    }
 }

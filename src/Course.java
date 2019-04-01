@@ -228,4 +228,15 @@ public class Course implements Cloneable{
 //        this.lessons = lessons;
 //        return true;
 //    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "classTypes=" + classTypes +
+                ", classesOrder=" + classesOrder +
+                ", enrolledStudents=" + enrolledStudents +
+                ", teachersMap=" + teachersMap +
+                ", courseName='" + courseName + '\'' +
+                '}';
+    }
 }

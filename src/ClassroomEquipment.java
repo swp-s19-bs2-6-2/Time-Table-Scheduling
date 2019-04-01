@@ -31,4 +31,11 @@ public class ClassroomEquipment implements Cloneable{
         ClassroomEquipment clone = (ClassroomEquipment)super.clone();
         return clone;
     }
+
+    @Override
+    public String toString() {
+        return "ClassroomEquipment{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

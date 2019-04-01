@@ -42,4 +42,13 @@ public class Lesson implements Cloneable {
         if (courseClassType != null) clone.courseClassType = (CourseClassType) courseClassType.clone(); // TODO: should not be null
         return clone;
     }
+
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "courseClassType=" + courseClassType +
+                ", course=" + course +
+                ", timeSlot=" + timeSlot +
+                '}';
+    }
 }

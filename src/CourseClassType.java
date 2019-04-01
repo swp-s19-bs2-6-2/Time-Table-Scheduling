@@ -21,4 +21,12 @@ public class CourseClassType {
         CourseClassType clone = (CourseClassType) super.clone();
         return clone;
     }
+
+    @Override
+    public String toString() {
+        return "CourseClassType{" +
+                "name='" + name + '\'' +
+                ", allStudents=" + allStudents +
+                '}';
+    }
 }
