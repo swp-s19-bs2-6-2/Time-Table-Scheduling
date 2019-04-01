@@ -95,6 +95,7 @@ public class Course implements Cloneable{
     }
 
     private List<CourseClassType> cloneClassesOrder(List<CourseClassType> classesOrder) throws CloneNotSupportedException {
+        if(classesOrder == null) return null;
         List<CourseClassType> clone = new ArrayList<>();
         for(int i = 0; i<classesOrder.size(); i++){
             clone.add(classesOrder.get(i).clone());
@@ -103,6 +104,7 @@ public class Course implements Cloneable{
     }
 
     private Map<CourseClassType, Integer> cloneClassTypes(Map<CourseClassType, Integer> classTypes) throws CloneNotSupportedException {
+        if(classTypes == null) return null;
         Map<CourseClassType, Integer> clone = new HashMap<>();
         Iterator<Map.Entry<CourseClassType, Integer>> iterator = classTypes.entrySet().iterator();
         while(iterator.hasNext()){

@@ -88,6 +88,7 @@ public class TimeSlot implements Comparable, Cloneable {
     }
     public void addLesson(Lesson lesson){
         lessons.add(lesson);
+        lesson.setTimeSlot(this);
     }
     public void removeLesson(Lesson lesson){ lessons.remove(lesson); }
 
