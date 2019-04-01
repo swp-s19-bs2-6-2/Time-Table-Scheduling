@@ -17,14 +17,16 @@ public class StudentsGroup implements Cloneable{
 
 
     // Constructors
-    public StudentsGroup(int studentsNumber){
+    public StudentsGroup(String name, int studentsNumber){
         this.studentsNumber = studentsNumber;
         this.students = new BitSet(studentsNumber);
+        this.name = name;
     }
 
-    public StudentsGroup(BitSet students){
+    public StudentsGroup(String name, BitSet students){
         this.studentsNumber = students.size();
         this.students = students;
+        this.name = name;
     }
 
     // Getters and setters
@@ -108,6 +110,6 @@ public class StudentsGroup implements Cloneable{
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        return new StudentsGroup((BitSet) this.students.clone());
+        return new StudentsGroup(this.name, (BitSet) this.students.clone());
     }
 }
