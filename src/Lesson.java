@@ -3,14 +3,15 @@ public class Lesson implements Cloneable {
     private CourseClassType courseClassType;
     // course of the lesson
     private Course course;
-
     // assigned teacher
     private Teacher assignedTeacher;
+    // group for this lesson
+    private StudentsGroup assignedGroup;
 
     // time slot of the lesson
-    private TimeSlot timeSlot;// TODO : decide to keep or replace
+    private TimeSlot timeSlot;
 
-    // Constructors
+    // Constructors TODO : Too much constructors, need to decide which of them to keep
 
     public Lesson(CourseClassType courseClassType, Course course) {
         this.courseClassType = courseClassType;
@@ -28,6 +29,14 @@ public class Lesson implements Cloneable {
         this.courseClassType = courseClassType;
         this.course = course;
         this.assignedTeacher = assignedTeacher;
+        this.timeSlot = timeSlot;
+    }
+
+    public Lesson(CourseClassType courseClassType, Course course, Teacher assignedTeacher, StudentsGroup assignedGroup, TimeSlot timeSlot) {
+        this.courseClassType = courseClassType;
+        this.course = course;
+        this.assignedTeacher = assignedTeacher;
+        this.assignedGroup = assignedGroup;
         this.timeSlot = timeSlot;
     }
 
@@ -53,6 +62,26 @@ public class Lesson implements Cloneable {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    // Time slot operations
+
+    public TimeSlot getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(TimeSlot timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    // Assigned group
+
+    public StudentsGroup getAssignedGroup() {
+        return assignedGroup;
+    }
+
+    public void setAssignedGroup(StudentsGroup assignedGroup) {
+        this.assignedGroup = assignedGroup;
     }
 
     // Assigned teacher operations
