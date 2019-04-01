@@ -12,7 +12,9 @@ public class Parser
     //ToDo: Check if data is duplicates
     private static final String STUDENTS_FILE_NAME = "Students.csv";
     private static final String COURSES_FILE_NAME = "Courses.csv";
-    public final String[] FILES = {STUDENTS_FILE_NAME, COURSES_FILE_NAME};
+    private static final String CLASSROOMS_FILE_NAME = "ClassRooms.csv";
+    private static final String TIME_SLOTS_FILE_NAME = "TimeSlots.csv";
+    public final String[] FILES = {STUDENTS_FILE_NAME, COURSES_FILE_NAME, CLASSROOMS_FILE_NAME, TIME_SLOTS_FILE_NAME};
 
     private final static String DIR = "data";
     public static void test(){
@@ -37,7 +39,72 @@ public class Parser
             System.out.println(g);
         List<Course> courses = parseCourses(new FileInputStream(WD.getPath() + File.separator + COURSES_FILE_NAME));
         for (Course c: courses)
-            System.out.println(c.courseName);
+            System.out.println(c);
+        List<Classroom> crms = parseClassRooms(new FileInputStream(WD.getPath() + File.separator + CLASSROOMS_FILE_NAME));
+        for (Classroom c: crms)
+            System.out.println(c);
+        List<TimeSlot> ts = parseTimeSlots(new FileInputStream(WD.getPath() + File.separator + TIME_SLOTS_FILE_NAME), crms);
+        for (TimeSlot s: ts)
+            System.out.println(s);
+    }
+
+
+    /*All the parsing methods
+    They take an Input stream and already parsed data and convert them into collection of needed objects
+    */
+
+
+
+    public List<TimeSlot> parseTimeSlots(final InputStream file, final List<Classroom> availableClassrooms) throws IncorrectFileStructureException {
+        final List<String[]> lines = parse(file);
+        final List<TimeSlot> slots = new ArrayList<>();
+
+        int l = 0;//line of error
+        for(String[] line: lines){
+            if (line.length != 4) throw new IncorrectFileStructureException(l, "Expected be 4 elements, got: "+line.length);
+            l++;
+
+            List<Classroom> cp = availableClassrooms
+                    .stream()
+                    .map( c -> new Classroom(c.getName(), c.getCapacity(), c.getEquipment()) )
+                    .collect(Collectors.toList());
+            try {
+                slots.add(new TimeSlot(Integer.parseInt(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3]), cp));
+            }catch(NumberFormatException e){
+                throw new IncorrectFileStructureException(l, "Expected integers, got: "+Arrays.toString(line));
+            }
+        }
+        return slots;
+    }
+
+    public List<Classroom> parseClassRooms(final InputStream ClassRoomsFile) throws IncorrectFileStructureException{
+        final List<String[]> lines = parse(ClassRoomsFile);
+        final List<Classroom> classes = new ArrayList<>();
+
+        int l = 0;//Line number for the exception
+        for (String[] line: lines){
+            l++;
+            if (line.length < 2) throw new IncorrectFileStructureException(l, "Should be in form of [name, capacity{, equipment:number of equipment, -\"-\"-}]");
+
+            Classroom c;
+            try {
+                c = new Classroom(line[0], Integer.parseInt(line[1]));
+            }catch(NumberFormatException e){
+                throw new IncorrectFileStructureException(l, "Expected integers, got: "+line[1]);
+            }
+            for (int i = 2; i < line.length; i++){
+                final String[] st = line[i].split(":");
+                if (st.length < 2) throw new IncorrectFileStructureException(l, "Equipment should be in form of [name:number], got: "+line[i]);
+                try{
+                    c.addNewEquipment(new ClassroomEquipment(st[0]), Integer.parseInt(st[1]));
+                }catch(NumberFormatException e){
+                    throw new IncorrectFileStructureException(l, "Expected integers, got: "+st[1]);
+                }
+            }
+
+            classes.add(c);
+        }
+        return classes;
     }
 
     public List<Course> parseCourses(final InputStream groupFiles) throws IncorrectFileStructureException{
@@ -88,8 +155,8 @@ public class Parser
 
 
 
-
-    public void validate(final File WD) throws NotDirectoryException, FileNotFoundException{
+    //Checks if the working directory us valid, throws Exceptions otherwise
+    private void validate(final File WD) throws NotDirectoryException, FileNotFoundException{
         if (!WD.exists()) throw new FileNotFoundException("Directory not found: "+WD.getAbsolutePath());
         if (WD.isFile()) throw new NotDirectoryException(WD.getAbsolutePath()+" is not a directory.");
 
@@ -106,69 +173,7 @@ public class Parser
     }
 
 
-
-
-
-    //ToDo: Rewrite
-    /*public List<Classroom> getClassRooms(Parser p) throws IncorrectFileStructureException{
-        List<String[]> lines = parse();
-        List<Classroom> classes = new ArrayList<>();
-
-        int l = 0;//Line number for the exception
-        for (String[] line: lines){
-            l++;
-
-            //ToDo: line[1::-1] - equipment
-            Classroom c;
-            try {
-                c = new Classroom(Integer.parseInt(line[0]));
-            }catch(NumberFormatException e){
-                throw new IncorrectFileStructureException(l, "Expected integers, got: "+Arrays.toString(line));
-            }
-            classes.add(c);
-        }
-        return classes;
-    }
-
-    public List<TimeSlot> getTimeSlots(Parser p, List<Classroom> availableClassrooms) throws IncorrectFileStructureException {
-        List<String[]> lines = parse();
-        List<TimeSlot> slots = new ArrayList<>();
-
-        int l = 0;//line of error
-        for(String[] line: lines){
-            if (line.length != 4) throw new IncorrectFileStructureException(l, "Expected be 4 elements, got: "+line.length);
-            l++;
-
-            List<Classroom> cp = availableClassrooms
-                    .stream()
-                    .map( c -> new Classroom(c.getCapacity(), c.getEquipment()) )
-                    .collect(Collectors.toList());
-
-            try {
-                slots.add(new TimeSlot(Integer.parseInt(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3]), cp));
-            }catch(NumberFormatException e){
-                throw new IncorrectFileStructureException(l, "Expected integers, got: "+Arrays.toString(line));
-            }
-        }
-        return slots;
-    }
-
-    public List<Lesson> getLessons() throws IncorrectFileStructureException {
-        List<String[]> lines = parse();
-        List<Lesson> lessons = new ArrayList<>();
-        for (String[] line: lines){
-            Course c = new Course(line[0]); // Course name
-            for (int i = 1; i < line.length; i++){
-                //ToDo: line[i] - course type which is now not very clear within internal structure
-                Lesson l = new Lesson(c);
-                lessons.add(l);
-            }
-        }
-        return lessons;
-    }*/
-
-
-
+    //Internal method which converts CSV into List of String arrays.
     private List<String[]> parse(InputStream f){
         try(CSVReader cr = new CSVReader(new BufferedReader(new InputStreamReader(f)))) {
             return cr.readAll()
@@ -187,6 +192,7 @@ public class Parser
 
 
 
+    //Is thrown when files are incorrect, the message should contain information about what was wrong in file
     static class IncorrectFileStructureException extends Exception{
         IncorrectFileStructureException(String message){super(message);}
         IncorrectFileStructureException(int line, String message){
