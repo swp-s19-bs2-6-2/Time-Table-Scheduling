@@ -88,7 +88,8 @@ public class Classroom implements Cloneable{
     @Override
     public String toString() {
         return "Classroom{" +
-                "capacity=" + capacity +
+                "name='" + name + '\'' +
+                ", capacity=" + capacity +
                 ", equipment=" + equipment +
                 '}';
     }
