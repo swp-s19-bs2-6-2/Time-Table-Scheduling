@@ -67,7 +67,7 @@ public class TimeTable {
             }
             if (result.size() == maxResults) return result;
         }
-        // goes forward without adding the lesson to current time slot
+        // goes forward without adding the lesson to the current time slot
         List<List<TimeSlot>> nextState_Continued = new ArrayList<>(currentState);
         List<Lesson> nextAvailableLessons_Continued = new ArrayList<>(availableLessons);
         currentTimeSlotNumber = (currentTimeSlotNumber + 1) % nextState_Continued.get(currentDay).size();
@@ -174,6 +174,7 @@ public class TimeTable {
         }
         return clone;
     }
+
 
 
 
