@@ -14,6 +14,11 @@ public class TimeTable {
         List<List<List<TimeSlot>>> possibleSchedules = go(availableTimeSlots, availableLessons, 0, 0, 100);
         timeSlots = chooseBest(possibleSchedules);
     }
+
+    public List<List<TimeSlot>> getTimeSlots() {
+        return timeSlots;
+    }
+
     public int kek = 11;
 
     /**
