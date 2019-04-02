@@ -1,8 +1,6 @@
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
-public class CourseClassType {
+public class CourseClassType implements Cloneable{
     public String name;    // Lecture, tutorial, e.t.c.
     public Boolean allStudents;
 
