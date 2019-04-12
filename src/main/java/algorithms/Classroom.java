@@ -1,3 +1,5 @@
+package algorithms;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -98,7 +100,7 @@ public class Classroom implements Cloneable{
 
     @Override
     public String toString() {
-        return "Classroom{" +
+        return "algorithms.Classroom{" +
                 "name='" + name + '\'' +
                 ", capacity=" + capacity +
                 ", equipment=" + equipment +

@@ -1,3 +1,5 @@
+package algorithms;
+
 public class ClassroomEquipment implements Cloneable{
     public String name;
 
@@ -34,7 +36,7 @@ public class ClassroomEquipment implements Cloneable{
 
     @Override
     public String toString() {
-        return "ClassroomEquipment{" +
+        return "algorithms.ClassroomEquipment{" +
                 "name='" + name + '\'' +
                 '}';
     }

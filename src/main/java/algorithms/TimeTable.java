@@ -1,12 +1,10 @@
+package algorithms;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TimeTable {
     private List<List<TimeSlot>> timeSlots;
-
-    public List<List<TimeSlot>> getTimeSlots() {
-        return timeSlots;
-    }
 
     // creates appropriate time table
     public TimeTable(List<TimeSlot> availableDayTimeSlots, int workingDays, List<Lesson> availableLessons) throws CloneNotSupportedException {
@@ -55,7 +53,7 @@ public class TimeTable {
             /*System.err.println("HERE:    " + kek++);
             for (int i = 0; i < currentState.size(); i++) {
                 for (int j = 0; j < currentState.get(i).size(); j++) {
-                    TimeSlot timeSlot = currentState.get(i).get(j);
+                    algorithms.TimeSlot timeSlot = currentState.get(i).get(j);
                     System.err.println("day: " + i + " time: " + timeSlot.startHour + ":" + timeSlot.startMinute + " - " + timeSlot.endHour + ":" + timeSlot.endMinute);
                     System.err.print("lessons: ");
                     for (int k = 0; k < timeSlot.getLessons().size(); k++) {

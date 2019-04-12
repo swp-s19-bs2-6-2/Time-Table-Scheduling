@@ -1,3 +1,5 @@
+package algorithms;
+
 public class Lesson implements Cloneable {
     // type of the lesson
     private CourseClassType courseClassType;
@@ -65,7 +67,7 @@ public class Lesson implements Cloneable {
         this.courseClassType = courseClassType;
     }
 
-    // Course operations
+    // algorithms.Course operations
 
     public Course getCourse() {
         return this.course;
@@ -95,7 +97,7 @@ public class Lesson implements Cloneable {
         this.assignedGroup = assignedGroup;
     }
 
-    // Classroom
+    // algorithms.Classroom
 
     public Classroom getClassroom() {
         return classroom;
@@ -125,7 +127,7 @@ public class Lesson implements Cloneable {
 
     @Override
     public String toString() {
-        return "Lesson{" +
+        return "algorithms.Lesson{" +
                 "courseClassType=" + courseClassType +
                 ", course=" + course +
                 ", assignedTeacher=" + assignedTeacher +

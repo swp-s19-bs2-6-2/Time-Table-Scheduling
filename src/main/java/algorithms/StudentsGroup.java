@@ -1,5 +1,7 @@
-import java.lang.reflect.Array;
-import java.util.*;
+package algorithms;
+
+import java.util.BitSet;
+import java.util.Iterator;
 
 /**
  * Represents group of students.
@@ -122,7 +124,7 @@ public class StudentsGroup implements Cloneable{
 
     @Override
     public String toString() {
-        return "StudentsGroup{" +
+        return "algorithms.StudentsGroup{" +
                 "name='" + name + '\'' +
                 ", studentsNumber=" + studentsNumber +
                 ", students=" + students +

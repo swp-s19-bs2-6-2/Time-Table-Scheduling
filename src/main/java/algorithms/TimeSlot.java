@@ -1,3 +1,5 @@
+package algorithms;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,7 +110,7 @@ public class TimeSlot implements Comparable, Cloneable {
 
     @Override
     public String toString() {
-        return "TimeSlot{" +
+        return "algorithms.TimeSlot{" +
                 "startHour=" + startHour +
                 ", startMinute=" + startMinute +
                 ", endHour=" + endHour +

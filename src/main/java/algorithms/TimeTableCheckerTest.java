@@ -1,8 +1,10 @@
+package algorithms;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TimeTableCheckerTest {
 
@@ -12,7 +14,7 @@ class TimeTableCheckerTest {
     List<TimeSlot> timeSlots;
     List<CourseClassType> classTypes;
     List<Course> courses;
-//    TimeTable table;
+//    algorithms.TimeTable table;
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
@@ -157,7 +159,7 @@ class TimeTableCheckerTest {
 //        assertEquals(res.negativeScore, 0);
         assertEquals(1, res.foundProblems.get("Student has more than 1 class in one timeslot").size());
         assertEquals(0, res.foundProblems.get("Room is holding more than 1 class in one timeslot").size());
-        assertEquals(1, res.foundProblems.get("Teacher has more than 1 class in one timeslot").size());
+        assertEquals(1, res.foundProblems.get("algorithms.Teacher has more than 1 class in one timeslot").size());
     }
 
     @org.junit.jupiter.api.Test

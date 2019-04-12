@@ -1,9 +1,11 @@
+package algorithms;
+
 import java.util.*;
 
 public class Course implements Cloneable{
 
     // Lessons of the course
-//    private List<Lesson> lessons;   // TODO : decide to keep or replace
+//    private List<algorithms.Lesson> lessons;   // TODO : decide to keep or replace
     private  Map<CourseClassType, Integer> classTypes;
     // Order of classes
     private List<CourseClassType> classesOrder;
@@ -91,14 +93,14 @@ public class Course implements Cloneable{
         return true;
     }
 
-//    boolean setClassesOrder(List<CourseClassType> order){
+//    boolean setClassesOrder(List<algorithms.CourseClassType> order){
 //        // Getting class types
-//        Set<CourseClassType> classTypes = new HashSet<>();
-//        for (Lesson lesson :lessons) {
+//        Set<algorithms.CourseClassType> classTypes = new HashSet<>();
+//        for (algorithms.Lesson lesson :lessons) {
 //            classTypes.add(lesson.getCourseClassType());
 //        }
 //        // Comparing correspondence
-//        for (CourseClassType classType : order){
+//        for (algorithms.CourseClassType classType : order){
 //            if (!classTypes.contains(classType)){
 //                return false;
 //            }
@@ -113,11 +115,11 @@ public class Course implements Cloneable{
 
 //    // Class types
 //
-//    public List<Lesson> getClassTypes() {
+//    public List<algorithms.Lesson> getClassTypes() {
 //        return classTypes;
 //    }
 //
-//    public void setClassTypes(List<Lesson> classTypes) {
+//    public void setClassTypes(List<algorithms.Lesson> classTypes) {
 //        this.classTypes = classTypes;
 //    }
 
@@ -176,19 +178,19 @@ public class Course implements Cloneable{
 
     // Lessons
 
-//    public List<Lesson> getLessons() {
+//    public List<algorithms.Lesson> getLessons() {
 //        return lessons;
 //    }
 //
-//    public boolean setLessons(List<Lesson> lessons) {
+//    public boolean setLessons(List<algorithms.Lesson> lessons) {
 //        // Checking course and order
 //        if (this.classesOrder.size() > 0) {
-//            Iterator<CourseClassType> orderIterator = this.classesOrder.iterator();
-//            CourseClassType currentClassType = orderIterator.next();
+//            Iterator<algorithms.CourseClassType> orderIterator = this.classesOrder.iterator();
+//            algorithms.CourseClassType currentClassType = orderIterator.next();
 //            int groupsAmount = this.enrolledStudents.size();
 //            int groupsHadClass = 0;
 //
-//            for (Lesson lesson : lessons){
+//            for (algorithms.Lesson lesson : lessons){
 //                if (lesson.getCourse() != this){
 //                    return false;
 //                }
@@ -229,7 +231,7 @@ public class Course implements Cloneable{
 
     @Override
     public String toString() {
-        return "Course{" +
+        return "algorithms.Course{" +
                 "classTypes=" + classTypes +
                 ", classesOrder=" + classesOrder +
                 ", enrolledStudents=" + enrolledStudents +

@@ -1,9 +1,11 @@
+import algorithms.TimeTable;
+import io.Parser;
+
 import java.io.File;
 import java.io.IOException;
 
+
 public class Main {
-
-
     private final static String DIR = "data";
     private static void test(){
         try {
@@ -20,20 +22,20 @@ public class Main {
     public static void main(String[] args) throws CloneNotSupportedException, IOException, Parser.IncorrectFileStructureException {
         test();
 
-        /*List<Lesson> availableLessons = new ArrayList<>();
+        /*List<algorithms.Lesson> availableLessons = new ArrayList<>();
         for(int i = 0; i<3; i++){
-            Course course = new Course(Integer.toString(i));
-            availableLessons.add(new Lesson(course));
+            algorithms.Course course = new algorithms.Course(Integer.toString(i));
+            availableLessons.add(new algorithms.Lesson(course));
         }
-        List<Classroom> availableClassrooms = new ArrayList<>();
+        List<algorithms.Classroom> availableClassrooms = new ArrayList<>();
         for(int i = 0; i<2; i++){
-            availableClassrooms.add(new Classroom(10));
+            availableClassrooms.add(new algorithms.Classroom(10));
         }
-        List<TimeSlot> availableTimeSlots = new ArrayList<>();
+        List<algorithms.TimeSlot> availableTimeSlots = new ArrayList<>();
         for(int i = 0; i<2; i++){
-            availableTimeSlots.add(new TimeSlot(i, 0, i + 1, 0, availableClassrooms));
+            availableTimeSlots.add(new algorithms.TimeSlot(i, 0, i + 1, 0, availableClassrooms));
         }
-        TimeTable timeTable = new TimeTable(availableTimeSlots, 5, availableLessons);
+        algorithms.TimeTable timeTable = new algorithms.TimeTable(availableTimeSlots, 5, availableLessons);
         timeTable.printTimeTable();*/
     }
 }

@@ -1,3 +1,5 @@
+package algorithms;
+
 import java.util.*;
 
 public class TimeTableChecker {
@@ -35,7 +37,7 @@ public class TimeTableChecker {
 
         // Identify if there is a teacher having 2 classes at a time
         currentProblem++;
-        problemDescription.add("Teacher has more than 1 class in one timeslot");
+        problemDescription.add("algorithms.Teacher has more than 1 class in one timeslot");
         res.foundProblems.put(problemDescription.get(currentProblem), new ArrayList<>());
 
         for (List<TimeSlot> day : tableSlots){

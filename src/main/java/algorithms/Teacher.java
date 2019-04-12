@@ -1,3 +1,5 @@
+package algorithms;
+
 import java.util.*;
 
 public class Teacher {
@@ -64,7 +66,7 @@ public class Teacher {
                 return false;
             }
         }
-//        for (TimeSlot t : timeSlots){
+//        for (algorithms.TimeSlot t : timeSlots){
 //            this.preferredTimeslots.add(t);
 //        }
         this.preferredTimeslots.addAll(timeSlots);
@@ -81,7 +83,7 @@ public class Teacher {
 
     @Override
     public String toString() {
-        return "Teacher{" +
+        return "algorithms.Teacher{" +
                 "teacherID=" + teacherID +
                 ", name='" + name + '\'' +
                 ", preferredTimeslots=" + preferredTimeslots +

@@ -1,3 +1,5 @@
+package algorithms;
+
 import java.util.Map;
 
 public class CourseClassType {  // TODO : refactor, class is not needed anymore, probably should be reaplaced with enum
@@ -23,7 +25,7 @@ public class CourseClassType {  // TODO : refactor, class is not needed anymore,
 
     @Override
     public String toString() {
-        return "CourseClassType{" +
+        return "algorithms.CourseClassType{" +
                 "name='" + name + '\'' +
                 ", allStudents=" + allStudents +
                 '}';

@@ -1,3 +1,6 @@
+package io;
+
+import algorithms.*;
 import com.opencsv.CSVReader;
 
 import java.io.*;
@@ -28,6 +31,7 @@ public class Parser
     }
 
 
+    //ToDo: remove output
     public TableResult parseAll(File WD) throws NotDirectoryException, FileNotFoundException, IncorrectFileStructureException {
         validate(WD);
         Map<String, YearGroup> groups = parseGroups(new FileInputStream(WD.getPath() + File.separator + STUDENTS_FILE_NAME));
@@ -74,14 +78,14 @@ public class Parser
 
             for (int i = 1; i < line.length; i++) {
                 String[] st = line[i].split(":");
-                if (st.length != 2) throw new IncorrectFileStructureException(l, "Lesson type - Teacher pair shold be in form of [type:teacher_id]");
+                if (st.length != 2) throw new IncorrectFileStructureException(l, "algorithms.Lesson type - algorithms.Teacher pair shold be in form of [type:teacher_id]");
                 if (!TYPES.containsKey(st[0])) throw new IncorrectFileStructureException(l, "There's no such course type as "+st[0]);
                 CourseClassType classType = TYPES.get(st[0]);
                 int teacherId;
                 try{
                     teacherId = Integer.parseInt(st[1]);
                 }catch (NumberFormatException e){
-                    throw new IncorrectFileStructureException(l, "Teacher id should be an integer");
+                    throw new IncorrectFileStructureException(l, "algorithms.Teacher id should be an integer");
                 }
                 if (!teachers.containsKey(teacherId)) throw new IncorrectFileStructureException(l, "There's no teacher with id = "+teacherId);
                 Teacher teacher = teachers.get(teacherId);
@@ -298,7 +302,7 @@ public class Parser
         public List<Lesson> getLessons() { return lessons; }
     }
 
-    //Course with group number
+    //algorithms.Course with group number
     private class NCourse{
         Course course;
         YearGroup group;
@@ -325,7 +329,7 @@ public class Parser
     }
 
     //Is thrown when files are incorrect, the message should contain information about what was wrong in file
-    static class IncorrectFileStructureException extends Exception{
+    public static class IncorrectFileStructureException extends Exception{
         IncorrectFileStructureException(String message){super(message);}
         IncorrectFileStructureException(int line, String message){
             super("Incorrect file format: "+message+"\nline: "+line);
