@@ -42,6 +42,15 @@ public class Lesson implements Cloneable {
         this.timeSlot = timeSlot;
     }
 
+    public Lesson(CourseClassType courseClassType, Course course, Teacher assignedTeacher, StudentsGroup assignedGroup, Classroom classroom, TimeSlot timeSlot) {
+        this.courseClassType = courseClassType;
+        this.course = course;
+        this.assignedTeacher = assignedTeacher;
+        this.assignedGroup = assignedGroup;
+        this.classroom = classroom;
+        this.timeSlot = timeSlot;
+    }
+
     public Lesson(Course course) {
         this.course = course;
     }

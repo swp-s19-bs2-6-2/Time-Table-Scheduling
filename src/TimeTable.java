@@ -15,6 +15,14 @@ public class TimeTable {
         timeSlots = chooseBest(possibleSchedules);
     }
 
+    /**
+     * Constructor needed for testing purposes
+     * @param timeSlots
+     */
+    public TimeTable(List<List<TimeSlot>> timeSlots) {
+        this.timeSlots = timeSlots;
+    }
+
     public List<List<TimeSlot>> getTimeSlots() {
         return timeSlots;
     }
