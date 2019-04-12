@@ -19,6 +19,20 @@ public class TimeTable {
     }
 
     /**
+     * Constructor needed for testing purposes
+     * @param timeSlots
+     */
+    public TimeTable(List<List<TimeSlot>> timeSlots) {
+        this.timeSlots = timeSlots;
+    }
+
+    public List<List<TimeSlot>> getTimeSlots() {
+        return timeSlots;
+    }
+
+    public int kek = 11;
+
+    /**
      * finds possible schedules
      *
      * @param currentState          current state of the time table (time slots and lessons inside it)

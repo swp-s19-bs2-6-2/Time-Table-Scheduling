@@ -22,7 +22,6 @@ public class StudentsGroup implements Cloneable{
         this.students = new BitSet(studentsNumber);
         this.name = name;
     }
-
     public StudentsGroup(String name, BitSet students){
         this.studentsNumber = students.size();
         this.students = students;
@@ -30,6 +29,14 @@ public class StudentsGroup implements Cloneable{
     }
 
     // Getters and setters
+
+    /**
+     * Get bitset representing students group
+     * @return
+     */
+    public BitSet getStudents() {
+        return students;
+    }
 
     /**
      * Get maximum number of students (number of all students in the university)

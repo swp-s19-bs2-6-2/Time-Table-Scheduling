@@ -1,6 +1,7 @@
 import java.util.Map;
 
-public class CourseClassType implements Cloneable{
+public class CourseClassType {  // TODO : refactor, class is not needed anymore, probably should be reaplaced with enum
+
     public String name;    // Lecture, tutorial, e.t.c.
     public Boolean allStudents;
 
