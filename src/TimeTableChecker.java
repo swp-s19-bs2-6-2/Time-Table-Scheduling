@@ -42,8 +42,10 @@ public class TimeTableChecker {
             for (TimeSlot ts : day){
                 Set <Teacher> involvedTeachers = new HashSet<>();
                 for (Lesson les : ts.getLessons()){
+//                    System.out.println(les.toString());
                     Teacher currentTeacher = les.getAssignedTeacher();
                     if (involvedTeachers.contains(currentTeacher)){
+                        System.out.println("FOUND INTERSECTING TEACHER!");
                         res.foundProblems.get(problemDescription.get(currentProblem)).add(ts);
                         break;
                     }
@@ -142,6 +144,10 @@ public class TimeTableChecker {
         public int numberOfProblems;
         public int negativeScore;
         public Map <String, List <TimeSlot> > foundProblems;
+
+        public Result() {
+            this.foundProblems = new HashMap<>();
+        }
     }
 
 //    public class WorkloadCheckResult extends Result {
