@@ -4,6 +4,9 @@ import java.util.List;
 public class TimeTable {
     private List<List<TimeSlot>> timeSlots;
 
+    public List<List<TimeSlot>> getTimeSlots() {
+        return timeSlots;
+    }
 
     // creates appropriate time table
     public TimeTable(List<TimeSlot> availableDayTimeSlots, int workingDays, List<Lesson> availableLessons) throws CloneNotSupportedException {
@@ -11,7 +14,7 @@ public class TimeTable {
         for (int day = 0; day < workingDays; day++) {
             availableTimeSlots.add(cloneTimeSlots(availableDayTimeSlots));
         }
-        List<List<List<TimeSlot>>> possibleSchedules = go(availableTimeSlots, availableLessons, 0, 0, 100);
+        List<List<List<TimeSlot>>> possibleSchedules = go(availableTimeSlots, availableLessons, 0, 0, 1000);
         timeSlots = chooseBest(possibleSchedules);
     }
 
@@ -31,11 +34,12 @@ public class TimeTable {
 
     /**
      * finds possible schedules
-     * @param currentState current state of the time table (time slots and lessons inside it)
-     * @param availableLessons shows the lessons which is not put to the schedule
+     *
+     * @param currentState          current state of the time table (time slots and lessons inside it)
+     * @param availableLessons      shows the lessons which is not put to the schedule
      * @param currentDay
      * @param currentTimeSlotNumber
-     * @param maxResults maximum amount of results to find
+     * @param maxResults            maximum amount of results to find
      * @return
      * @throws CloneNotSupportedException
      */
@@ -73,20 +77,20 @@ public class TimeTable {
             addLesson(timeSlot, lesson);
             nextAvailableLessons_Added.remove(nextLessonId);
             List<List<List<TimeSlot>>> nextPossibleSchedules = go(nextState_Added, nextAvailableLessons_Added, currentDay, currentTimeSlotNumber, maxResults);
-            if(nextPossibleSchedules != null) {
+            if (nextPossibleSchedules != null) {
                 for (int i = 0; i < nextPossibleSchedules.size(); i++) {
                     if (result.size() < maxResults) result.add(nextPossibleSchedules.get(i));
                 }
             }
             if (result.size() == maxResults) return result;
         }
-        // goes forward without adding the lesson to current time slot
+        // goes forward without adding the lesson to the current time slot
         List<List<TimeSlot>> nextState_Continued = new ArrayList<>(currentState);
         List<Lesson> nextAvailableLessons_Continued = new ArrayList<>(availableLessons);
         currentTimeSlotNumber = (currentTimeSlotNumber + 1) % nextState_Continued.get(currentDay).size();
         currentDay = (currentTimeSlotNumber == 0 ? currentDay + 1 : currentDay);
         List<List<List<TimeSlot>>> nextPossibleSchedules = go(nextState_Continued, nextAvailableLessons_Continued, currentDay, currentTimeSlotNumber, maxResults);
-        if(nextPossibleSchedules != null) {
+        if (nextPossibleSchedules != null) {
             for (int i = 0; i < nextPossibleSchedules.size(); i++) {
                 if (result.size() < maxResults) result.add(nextPossibleSchedules.get(i));
             }
@@ -95,10 +99,24 @@ public class TimeTable {
     }
 
 
-
     private boolean canAddLesson(TimeSlot timeSlot, Lesson lesson) { // TODO: all possible conditions for adding the lesson to the current time slot
-        if (timeSlot.getAvailableClassrooms().size() > timeSlot.getLessons().size()) return true;
-        else return false;
+        if (timeSlot.getAvailableClassrooms().size() <= timeSlot.getLessons().size()) {
+            return false;
+        }
+        for (int i = 0; i < timeSlot.getLessons().size(); i++) {
+            if (intersectTeacherOrStudents(lesson, timeSlot.getLessons().get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean intersectTeacherOrStudents(Lesson lesson_A, Lesson lesson_B) {
+        if (lesson_A.getAssignedGroup().intersect(lesson_B.getAssignedGroup())
+                || lesson_A.getAssignedTeacher().getTeacherID() == lesson_B.getAssignedTeacher().getTeacherID()) {
+            return true;
+        }
+        return false;
     }
 
     private void addLesson(TimeSlot timeSlot, Lesson lesson) {
@@ -111,6 +129,9 @@ public class TimeTable {
 
     // chooses the best schedule from the provided list
     public List<List<TimeSlot>> chooseBest(List<List<List<TimeSlot>>> possilbeSchedules) {
+        if(possilbeSchedules==null || possilbeSchedules.size() == 0){
+            return null;
+        }
         int best = 0;
         for (int i = 1; i < possilbeSchedules.size(); i++) {
             if (betterSchedule(possilbeSchedules.get(i), possilbeSchedules.get(best))) {
@@ -148,7 +169,7 @@ public class TimeTable {
             difference_B += Math.abs(lessonsCurrentDay_B - averageLessonsPerDay);
         }
 
-        if(difference_A < difference_B) return true;
+        if (difference_A < difference_B) return true;
         else return false;
     }
 
@@ -157,9 +178,10 @@ public class TimeTable {
             for (int j = 0; j < timeSlots.get(i).size(); j++) {
                 TimeSlot timeSlot = timeSlots.get(i).get(j);
                 System.out.println("day: " + i + " time: " + timeSlot.startHour + ":" + timeSlot.startMinute + " - " + timeSlot.endHour + ":" + timeSlot.endMinute);
-                System.out.print("lessons: ");
+                System.out.println("lessons: ");
                 for (int k = 0; k < timeSlot.getLessons().size(); k++) {
-                    System.out.print(timeSlot.getLessons().get(k).getCourse().courseName + " ");
+                    System.out.print(timeSlot.getLessons().get(k).getCourse().courseName + " "
+                            + timeSlot.getLessons().get(k).getCourseClassType().name + " " + timeSlot.getLessons().get(k).getAssignedGroup().name + "\n");
                 }
                 System.out.println();
             }
@@ -173,21 +195,21 @@ public class TimeTable {
         }
         return clone;
     }
+
     private List<List<TimeSlot>> cloneState(List<List<TimeSlot>> currentState) throws CloneNotSupportedException {
         List<List<TimeSlot>> clone = new ArrayList<>();
-        for(int i = 0; i < currentState.size(); i++){
+        for (int i = 0; i < currentState.size(); i++) {
             clone.add(cloneTimeSlots(currentState.get(i)));
         }
         return clone;
     }
+
     private List<Lesson> cloneLessons(List<Lesson> availableLessons) throws CloneNotSupportedException {
         List<Lesson> clone = new ArrayList<>();
-        for(int i = 0; i<availableLessons.size(); i++){
+        for (int i = 0; i < availableLessons.size(); i++) {
             clone.add(availableLessons.get(i).clone());
         }
         return clone;
     }
-
-
 
 }

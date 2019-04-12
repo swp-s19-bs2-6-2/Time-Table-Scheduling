@@ -1,8 +1,7 @@
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class CourseClassType {  // TODO : refactor, class is not needed anymore, probably should be reaplaced with enum
+
     public String name;    // Lecture, tutorial, e.t.c.
     public Boolean allStudents;
 
