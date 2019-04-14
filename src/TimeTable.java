@@ -14,7 +14,7 @@ public class TimeTable {
         for (int day = 0; day < workingDays; day++) {
             availableTimeSlots.add(cloneTimeSlots(availableDayTimeSlots));
         }
-        List<List<List<TimeSlot>>> possibleSchedules = go(availableTimeSlots, availableLessons, 0, 0, 1000);
+        List<List<List<TimeSlot>>> possibleSchedules = go(availableTimeSlots, availableLessons, 0, 0, 10000);
         timeSlots = chooseBest(possibleSchedules);
     }
 
