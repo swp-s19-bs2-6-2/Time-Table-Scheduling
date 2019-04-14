@@ -49,6 +49,13 @@ public class Teacher {
 
     // Time slots operations
 
+    boolean hasPreferredTimeSlots(){
+        if (this.preferredTimeslots.size() == 0){
+            return false;
+        }
+        return true;
+    }
+
     private void sortTimesSlots(){
         for (Map.Entry<Integer, List <Integer > > day: this.preferredTimeslots.entrySet()){
             Collections.sort(day.getValue());
