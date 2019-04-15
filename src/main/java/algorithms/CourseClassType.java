@@ -18,9 +18,10 @@ public class CourseClassType {  // TODO : refactor, class is not needed anymore,
         this.allStudents = allStudents;
     }
 
-    public CourseClassType clone() throws CloneNotSupportedException {
-        CourseClassType clone = (CourseClassType) super.clone();
-        return clone;
+    public CourseClassType clone() throws CloneNotSupportedException {  // TODO : Do we really need to clone this?
+//        CourseClassType clone = (CourseClassType) super.clone();
+//        return clone;
+        return new CourseClassType(this.name, this.allStudents);
     }
 
     @Override

@@ -22,13 +22,15 @@ public class TimeSlot implements Comparable, Cloneable {
      * Create new object using "other". Copies all besides lessons
      * @param other
      */
-    public TimeSlot(TimeSlot other) {
+    public TimeSlot(TimeSlot other) throws CloneNotSupportedException{
         this.startHour = other.startHour;
         this.startMinute = other.startMinute;
         this.endHour = other.endHour;
         this.endMinute = other.endMinute;
-        this.availableClassrooms = new ArrayList<>(other.availableClassrooms);
-        this.lessons = new ArrayList<>();
+//        this.availableClassrooms = new ArrayList<>(other.availableClassrooms);
+//        this.lessons = new ArrayList<>(other.lessons);
+        this.availableClassrooms = this.cloneClassrooms(other.getAvailableClassrooms());
+        this.lessons = this.cloneLessons(other.getLessons());
     }
 
     public TimeSlot(int startHour, int startMinute, int endHour, int endMinute, List<Classroom> availableClassrooms) {
@@ -119,10 +121,10 @@ public class TimeSlot implements Comparable, Cloneable {
     }
 
     public TimeSlot clone() throws CloneNotSupportedException{
-        TimeSlot clone = (TimeSlot)super.clone();
+        /*TimeSlot clone = (TimeSlot)super.clone();
         clone.lessons = (List<Lesson>) cloneLessons(lessons);
-        clone.availableClassrooms = (List<Classroom>)cloneClassrooms(availableClassrooms);
-        return clone;
+        clone.availableClassrooms = (List<Classroom>)cloneClassrooms(availableClassrooms);*/
+        return new TimeSlot(this);
     }
 
     private List<Classroom> cloneClassrooms(List<Classroom> availableClassrooms) throws CloneNotSupportedException {
