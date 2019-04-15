@@ -1,0 +1,8 @@
+POST /api/v1/csv
+Body: content of the zip file with .csv files
+Response: {"id" : <str>}
+
+GET /api/v1/timetable?id=<str>
+Response: if given data is in wrong format { "status" : -2, "msg" :  "Wrong input format: [*.csv is not formatted properly]" }
+          if no given data { "status" : -1, "msg" : "No .csv input files given" }
+          if app table is generated { "status" : 1, "table" : <JSON> }
