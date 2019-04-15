@@ -1,8 +1,8 @@
 import algorithms.TimeTable;
+import io.JSONWrapper;
 import io.Parser;
 
 import java.io.File;
-import java.io.IOException;
 
 
 public class Main {
@@ -11,7 +11,10 @@ public class Main {
         try {
             Parser p = new Parser();
             Parser.TableResult r = p.parseAll(new File(DIR));
-            new TimeTable(r.getTimeSlots(), 5, r.getLessons()).printTimeTable();
+            TimeTable tt = new TimeTable(r.getTimeSlots(), 5, r.getLessons());
+            tt.printTimeTable();
+            System.out.println(new JSONWrapper().wrap(tt));
+
         }catch (Exception e){
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -19,7 +22,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws CloneNotSupportedException, IOException, Parser.IncorrectFileStructureException {
+    public static void main(String[] args){
         test();
 
         /*List<algorithms.Lesson> availableLessons = new ArrayList<>();
