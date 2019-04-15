@@ -42,8 +42,6 @@ public class Parser
         Map<String, YearGroup> groups = parseGroups(new FileInputStream(WD.getPath() + File.separator + STUDENTS_FILE_NAME));
         Map<String, NCourse> courses = parseCourses(new FileInputStream(WD.getPath() + File.separator + COURSES_FILE_NAME), groups);
         Map<Integer, Teacher> teachers = parseTeacher(new FileInputStream(WD.getPath() + File.separator + TEACHERS_FILE_NAME), workingDays, ts);
-        for (Teacher t: teachers.values())
-            System.out.println(t);
         List<Lesson> lessons = parseLessons(new FileInputStream(WD.getPath() + File.separator + LESSONS_FILE_NAME),
                 courses, teachers);
 
@@ -121,7 +119,7 @@ public class Parser
 
         int l = 0;//for error
         for (String[] line: lines){
-            if (line.length < 2) throw new IncorrectFileStructureException(l, "Should be in form of [ID, Name]");
+            if (line.length < 2) throw new IncorrectFileStructureException(l, "Should be in form of [ID, Name{, preferred_day:preferred_slot, -\"\"-}]");
             int id;
             try {
                 id = Integer.parseInt(line[0]);
@@ -213,9 +211,24 @@ public class Parser
         final Map<String, NCourse> toReturn = new HashMap<>();
         int ln = 0;//lines for error
         for (String[] line: lines){
-            if (line.length != 2) throw new IncorrectFileStructureException(ln, "Should be in form of [name, group]");
+            if (line.length != 2 && line.length != 5) throw new IncorrectFileStructureException(ln, "Should be in form of [name, group] or [name, group, lesson_type_1, lesson_type_2, lesson_type_3] for order");
             if (!groups.containsKey(line[1])) throw new IncorrectFileStructureException(ln, "Grade group "+line[1]+" does not exist.");
-            toReturn.put(line[0], new NCourse(new Course(line[0]), groups.get(line[1])));
+            Course course = new Course(line[0]);
+            toReturn.put(line[0], new NCourse(course, groups.get(line[1])));
+
+
+            if (line.length == 5){
+                List<CourseClassType> order = new ArrayList<>(3);
+                for (int i = 2; i < 5; i++){
+                    if (!TYPES.containsKey(line[i])) throw new IncorrectFileStructureException(ln, "There's no such type as "+line[i]);
+                    if (order.contains(TYPES.get(line[i]))) throw new IncorrectFileStructureException(ln, "There's already a "+line[i]+" in lessons order");
+                    order.add(TYPES.get(line[i]));
+                }
+                boolean result = course.setClassesOrder(order);
+                if (!result) throw new IncorrectFileStructureException(ln, "Course order doesn't correspond to Course lessons.");
+            }
+
+
             ln++;
         }
         return toReturn;
