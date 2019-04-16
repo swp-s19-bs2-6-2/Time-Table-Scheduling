@@ -1,6 +1,8 @@
 package server;
 
 import algorithms.TimeTable;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import io.JSONWrapper;
 import io.Parser;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
@@ -44,8 +46,8 @@ public class RequestProcessor {
                 Parser.TableResult tableResult = parser.parseAll(tempDirectory.toFile());
                 TimeTable generatedTimeTable = new TimeTable(tableResult.getTimeSlots(), 5, tableResult.getLessons());
                 // TODO : convert to json
-//                generatedTimeTable.printTimeTable();
-                String timeTablejson = "It works";  // TODO : replace with working code :)
+                String timeTablejson = "It works";
+                timeTablejson = new JSONWrapper().wrap(generatedTimeTable);
                 IDtoResult.put(currentID, timeTablejson);
             } catch (Parser.IncorrectFileStructureException ex){
                 ex.printStackTrace();

@@ -23,13 +23,13 @@ public class APIResponses {
     }
 
     public static  class IDResponse {
-        private final long id;
+        private final String id;
 
-        public IDResponse(long id) {
+        public IDResponse(String id) {
             this.id = id;
         }
 
-        public long getID() {
+        public String getID() {
             return this.id;
         }
     }

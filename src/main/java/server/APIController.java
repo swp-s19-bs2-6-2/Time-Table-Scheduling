@@ -18,6 +18,7 @@ public class APIController {
         return new APIResponses.MSGResponse(0, "123");
     }
 
+    @CrossOrigin
     @PostMapping(pathPrefix + "csv")
     APIResponses.IDResponse uploadCsv(@RequestParam("file") MultipartFile recvdFile) throws IOException, InterruptedException {
         long new_id = 0;
@@ -29,12 +30,14 @@ public class APIController {
 
 //        file.delete();    // TODO : Delete temp files!!!
 
-        return new APIResponses.IDResponse(new_id);
+        return new APIResponses.IDResponse(Long.toString(new_id));
     }
 
+    @CrossOrigin
     @GetMapping(pathPrefix + "timetable")
-    APIResponses.TableResponse getTimeTable(@RequestParam("id") long id) throws InterruptedException{
-        String result = RequestProcessor.waitResultReady(id);
+    APIResponses.TableResponse getTimeTable(@RequestParam("id") String id) throws InterruptedException{
+        Long converted_id = Long.parseLong(id);
+        String result = RequestProcessor.waitResultReady(converted_id);
         return new APIResponses.TableResponse(APIResponses.successCode, result);
     }
 }
