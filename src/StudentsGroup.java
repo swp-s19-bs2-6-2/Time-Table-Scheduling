@@ -1,7 +1,5 @@
-package algorithms;
-
-import java.util.BitSet;
-import java.util.Iterator;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Represents group of students.
@@ -19,26 +17,17 @@ public class StudentsGroup implements Cloneable{
 
 
     // Constructors
-    public StudentsGroup(String name, int studentsNumber){
+    public StudentsGroup(int studentsNumber){
         this.studentsNumber = studentsNumber;
         this.students = new BitSet(studentsNumber);
-        this.name = name;
     }
-    public StudentsGroup(String name, BitSet students){
+
+    public StudentsGroup(BitSet students){
         this.studentsNumber = students.size();
         this.students = students;
-        this.name = name;
     }
 
     // Getters and setters
-
-    /**
-     * Get bitset representing students group
-     * @return
-     */
-    public BitSet getStudents() {
-        return students;
-    }
 
     /**
      * Get maximum number of students (number of all students in the university)
@@ -119,15 +108,6 @@ public class StudentsGroup implements Cloneable{
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        return new StudentsGroup(this.name, (BitSet) this.students.clone());
-    }
-
-    @Override
-    public String toString() {
-        return "algorithms.StudentsGroup{" +
-                "name='" + name + '\'' +
-                ", studentsNumber=" + studentsNumber +
-                ", students=" + students +
-                '}';
+        return new StudentsGroup((BitSet) this.students.clone());
     }
 }

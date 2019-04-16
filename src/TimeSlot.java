@@ -1,5 +1,3 @@
-package algorithms;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,22 +13,20 @@ public class TimeSlot implements Comparable, Cloneable {
     // Available classrooms during this time slot
     private List<Classroom> availableClassrooms;
 
-    // Lessons.csv during this time slot
+    // Lessons during this time slot
     private List<Lesson> lessons;
 
     /**
      * Create new object using "other". Copies all besides lessons
      * @param other
      */
-    public TimeSlot(TimeSlot other) throws CloneNotSupportedException{
+    public TimeSlot(TimeSlot other) {
         this.startHour = other.startHour;
         this.startMinute = other.startMinute;
         this.endHour = other.endHour;
         this.endMinute = other.endMinute;
-//        this.availableClassrooms = new ArrayList<>(other.availableClassrooms);
-//        this.lessons = new ArrayList<>(other.lessons);
-        this.availableClassrooms = this.cloneClassrooms(other.getAvailableClassrooms());
-        this.lessons = this.cloneLessons(other.getLessons());
+        this.availableClassrooms = new ArrayList<>(other.availableClassrooms);
+        this.lessons = new ArrayList<>();
     }
 
     public TimeSlot(int startHour, int startMinute, int endHour, int endMinute, List<Classroom> availableClassrooms) {
@@ -82,7 +78,7 @@ public class TimeSlot implements Comparable, Cloneable {
         availableClassrooms.remove(classroom);
     }
 
-    // Lessons.csv
+    // Lessons
 
     public List<Lesson> getLessons(){
         return lessons;
@@ -92,7 +88,6 @@ public class TimeSlot implements Comparable, Cloneable {
     }
     public void addLesson(Lesson lesson){
         lessons.add(lesson);
-        lesson.setTimeSlot(this);
     }
     public void removeLesson(Lesson lesson){ lessons.remove(lesson); }
 
@@ -112,7 +107,7 @@ public class TimeSlot implements Comparable, Cloneable {
 
     @Override
     public String toString() {
-        return "algorithms.TimeSlot{" +
+        return "TimeSlot{" +
                 "startHour=" + startHour +
                 ", startMinute=" + startMinute +
                 ", endHour=" + endHour +
@@ -121,10 +116,10 @@ public class TimeSlot implements Comparable, Cloneable {
     }
 
     public TimeSlot clone() throws CloneNotSupportedException{
-        /*TimeSlot clone = (TimeSlot)super.clone();
+        TimeSlot clone = (TimeSlot)super.clone();
         clone.lessons = (List<Lesson>) cloneLessons(lessons);
-        clone.availableClassrooms = (List<Classroom>)cloneClassrooms(availableClassrooms);*/
-        return new TimeSlot(this);
+        clone.availableClassrooms = (List<Classroom>)cloneClassrooms(availableClassrooms);
+        return clone;
     }
 
     private List<Classroom> cloneClassrooms(List<Classroom> availableClassrooms) throws CloneNotSupportedException {

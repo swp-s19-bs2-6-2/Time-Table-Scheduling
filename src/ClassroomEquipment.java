@@ -1,5 +1,3 @@
-package algorithms;
-
 public class ClassroomEquipment implements Cloneable{
     public String name;
 
@@ -32,12 +30,5 @@ public class ClassroomEquipment implements Cloneable{
     public ClassroomEquipment clone() throws CloneNotSupportedException {
         ClassroomEquipment clone = (ClassroomEquipment)super.clone();
         return clone;
-    }
-
-    @Override
-    public String toString() {
-        return "algorithms.ClassroomEquipment{" +
-                "name='" + name + '\'' +
-                '}';
     }
 }
