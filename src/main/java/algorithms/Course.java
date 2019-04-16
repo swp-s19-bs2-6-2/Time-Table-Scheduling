@@ -79,9 +79,10 @@ public class Course implements Cloneable{
 
     // Class order
 
-    boolean setClassesOrder(List<CourseClassType> order){
+    public boolean setClassesOrder(List<CourseClassType> order){
         Map<CourseClassType,  Integer> checkClassTypes = new HashMap<>();
         for (CourseClassType class_type : order){
+            if (!checkClassTypes.containsKey(class_type)) checkClassTypes.put(class_type, 0);
             checkClassTypes.put(class_type, checkClassTypes.get(class_type) + 1);
         }
         for (CourseClassType class_type : this.classTypes.keySet()){

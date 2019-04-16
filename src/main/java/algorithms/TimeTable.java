@@ -12,7 +12,7 @@ public class TimeTable {
         for (int day = 0; day < workingDays; day++) {
             availableTimeSlots.add(cloneTimeSlots(availableDayTimeSlots));
         }
-        List<List<List<TimeSlot>>> possibleSchedules = go(availableTimeSlots, availableLessons, 0, 0, 1000);
+        List<List<List<TimeSlot>>> possibleSchedules = go(availableTimeSlots, availableLessons, 0, 0, 100);
         timeSlots = chooseBest(possibleSchedules);
     }
 
@@ -103,11 +103,13 @@ public class TimeTable {
 
     private boolean canAddLesson(TimeSlot timeSlot, Lesson lesson, List<Lesson> availableLessons, int day, int timeSlotNumber) { // TODO: all possible conditions for adding the lesson to the current time slot
         if (timeSlot.getAvailableClassrooms().size() <= timeSlot.getLessons().size()) {
+            System.err.println(1);
             return false;
         }
         // is this time slot is good for the teacher
         Teacher teacher = lesson.getAssignedTeacher();
         if (!teacher.getPreferredTimeslots().containsKey(day) || !teacher.getPreferredTimeslots().get(day).contains(timeSlotNumber)) {
+            System.err.println(2);
             return false;
         }
         Course course = lesson.getCourse();
@@ -119,20 +121,24 @@ public class TimeTable {
                 // if lesson which should be before still in the list of available lessons then it is incorrect schedule
                 boolean found = false;
                 for (int j = 0; j < availableLessons.size(); j++) {
-                    if (availableLessons.get(j).getCourse().courseName.equals(course.courseName) && availableLessons.get(j).getCourseClassType().name.equals(course.getClassesOrder().get(i).name)) {
+                    if (availableLessons.get(j).getCourse().courseName.equals(course.courseName) &&
+                            availableLessons.get(j).getCourseClassType().name.equals(course.getClassesOrder().get(i).name)) {
                         found = true;
                     }
                 }
                 if (found == true) {
+                    System.err.println(3);
                     return false;
                 }
             }
         }
         for (int i = 0; i < timeSlot.getLessons().size(); i++) {
             if (intersectTeacherOrStudents(lesson, timeSlot.getLessons().get(i))) {
+                System.err.println(4);
                 return false;
             }
         }
+        System.err.println(5);
         return true;
     }
 
@@ -202,11 +208,13 @@ public class TimeTable {
         for (int i = 0; i < timeSlots.size(); i++) {
             for (int j = 0; j < timeSlots.get(i).size(); j++) {
                 TimeSlot timeSlot = timeSlots.get(i).get(j);
-                System.out.println("day: " + i + " time: " + timeSlot.startHour + ":" + timeSlot.startMinute + " - " + timeSlot.endHour + ":" + timeSlot.endMinute);
+                System.out.println("day: " + i + " time: " + timeSlot.startHour + ":" + timeSlot.startMinute + " - "
+                        + timeSlot.endHour + ":" + timeSlot.endMinute);
                 System.out.println("lessons: ");
                 for (int k = 0; k < timeSlot.getLessons().size(); k++) {
                     System.out.print(timeSlot.getLessons().get(k).getCourse().courseName + " "
-                            + timeSlot.getLessons().get(k).getCourseClassType().name + " " + timeSlot.getLessons().get(k).getAssignedGroup().name + "\n");
+                            + timeSlot.getLessons().get(k).getCourseClassType().name + " " + timeSlot.getLessons().get(k).getAssignedGroup().name + " "
+                            + timeSlot.getLessons().get(k).getAssignedTeacher().getName() + "\n");
                 }
                 System.out.println();
             }
