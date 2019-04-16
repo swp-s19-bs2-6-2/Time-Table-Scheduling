@@ -27,13 +27,13 @@ public class APIController {
 
         new_id = RequestProcessor.addToQueue(file);
 
-        file.delete();
+//        file.delete();    // TODO : Delete temp files!!!
 
         return new APIResponses.IDResponse(new_id);
     }
 
     @GetMapping(pathPrefix + "timetable")
-    APIResponses.TableResponse getTimeTable(@RequestParam("id") long id){
+    APIResponses.TableResponse getTimeTable(@RequestParam("id") long id) throws InterruptedException{
         String result = RequestProcessor.waitResultReady(id);
         return new APIResponses.TableResponse(APIResponses.successCode, result);
     }

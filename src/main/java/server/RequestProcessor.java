@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,7 +26,7 @@ public class RequestProcessor {
 
     private static LinkedBlockingQueue <Long> queue = new LinkedBlockingQueue <Long>();
     private static ConcurrentHashMap <Long, File> IDtoFile = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap <Long, ReentrantLock> IDtoLock = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap <Long, CountDownLatch> IDtoLock = new ConcurrentHashMap<>();
     private static ConcurrentHashMap <Long, String> IDtoResult= new ConcurrentHashMap<>();
     private static Path tempDirectory = null;
     private static AlgorithmExecutionThread algorithmThread = null;
@@ -43,7 +44,7 @@ public class RequestProcessor {
                 Parser.TableResult tableResult = parser.parseAll(tempDirectory.toFile());
                 TimeTable generatedTimeTable = new TimeTable(tableResult.getTimeSlots(), 5, tableResult.getLessons());
                 // TODO : convert to json
-                generatedTimeTable.printTimeTable();
+//                generatedTimeTable.printTimeTable();
                 String timeTablejson = "It works";  // TODO : replace with working code :)
                 IDtoResult.put(currentID, timeTablejson);
             } catch (Parser.IncorrectFileStructureException ex){
@@ -92,16 +93,15 @@ public class RequestProcessor {
         // Associating file with this ID
         IDtoFile.put(currentID, file);
         // Associating lock with this ID (locked until result is ready)
-        ReentrantLock resultLock = new ReentrantLock();
-        resultLock.lock();
-        IDtoLock.put(currentID, resultLock);
+        CountDownLatch resultLatch = new CountDownLatch(1);
+        IDtoLock.put(currentID, resultLatch);
         // Adding to the queue
         queue.put(currentID);
         return currentID;
     }
 
     private static void notifyResultReady(Long id){
-        IDtoLock.get(id).unlock();
+        IDtoLock.get(id).countDown();
     }
 
     private static void removeID(Long id){
@@ -110,9 +110,9 @@ public class RequestProcessor {
         IDtoResult.remove(id);
     }
 
-    public static String waitResultReady(Long id){
+    public static String waitResultReady(Long id) throws InterruptedException{
         String res;
-        IDtoLock.get(id).lock();
+        IDtoLock.get(id).await();
         res = IDtoResult.get(id);
         removeID(id);
         return res;

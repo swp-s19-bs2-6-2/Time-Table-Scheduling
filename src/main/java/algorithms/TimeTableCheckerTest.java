@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TimeTableCheckerTest {
 
@@ -14,7 +14,7 @@ class TimeTableCheckerTest {
     List<TimeSlot> timeSlots;
     List<CourseClassType> classTypes;
     List<Course> courses;
-//    algorithms.TimeTable table;
+//    TimeTable table;
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
@@ -72,6 +72,8 @@ class TimeTableCheckerTest {
         // Timeslots initialization
 
         timeSlots = new ArrayList<>();
+        timeSlots.add(new TimeSlot(8, 0, 10, 0, rooms));
+        timeSlots.add(new TimeSlot(10, 0, 12, 0, rooms));
         timeSlots.add(new TimeSlot(12, 0, 14, 0, rooms));
         timeSlots.add(new TimeSlot(14, 0, 16, 0, rooms));
         timeSlots.add(new TimeSlot(16, 0, 18, 0, rooms));
@@ -139,6 +141,7 @@ class TimeTableCheckerTest {
         tempLessons.add(new Lesson(classTypes.get(0), courses.get(1), teachers.get(1), groups.get(1), rooms.get(1) ,tempTimeslots.get(0)));
         tempLessons.add(new Lesson(classTypes.get(0), courses.get(1), teachers.get(1), groups.get(2), rooms.get(2) ,tempTimeslots.get(0)));
         tempTimeslots.get(0).setLessons(tempLessons);
+        content.add(tempTimeslots);
 
 //        content = new ArrayList<>();
         tempTimeslots = new ArrayList<>();
@@ -152,13 +155,26 @@ class TimeTableCheckerTest {
         tempTimeslots.get(1).setLessons(tempLessons);
 
         content.add(tempTimeslots);
+
+        tempTimeslots = new ArrayList<>();
+        for (TimeSlot ts : timeSlots){
+            tempTimeslots.add(ts.clone());
+        }
+        tempLessons = new ArrayList<>();
+        tempLessons.add(new Lesson(classTypes.get(1), courses.get(0), teachers.get(0), groups.get(0), rooms.get(0) ,tempTimeslots.get(1)));
+        tempLessons.add(new Lesson(classTypes.get(0), courses.get(1), teachers.get(1), groups.get(1), rooms.get(1) ,tempTimeslots.get(1)));
+        tempLessons.add(new Lesson(classTypes.get(0), courses.get(1), teachers.get(2), groups.get(2), rooms.get(1) ,tempTimeslots.get(1)));
+        tempTimeslots.get(1).setLessons(tempLessons);
+
+        content.add(tempTimeslots);
+
         TimeTable table1 = new TimeTable(content);
 
         TimeTableChecker.Result res = TimeTableChecker.checkForCollisions(table1);
 
 //        assertEquals(res.negativeScore, 0);
         assertEquals(1, res.foundProblems.get("Student has more than 1 class in one timeslot").size());
-        assertEquals(0, res.foundProblems.get("Room is holding more than 1 class in one timeslot").size());
+        assertEquals(1, res.foundProblems.get("Room is holding more than 1 class in one timeslot").size());
         assertEquals(1, res.foundProblems.get("algorithms.Teacher has more than 1 class in one timeslot").size());
     }
 
@@ -176,7 +192,39 @@ class TimeTableCheckerTest {
         tempTimeslots.get(0).setLessons(tempLessons);
 
 //        content = new ArrayList<>();
-            tempTimeslots = new ArrayList<>();
+        tempTimeslots = new ArrayList<>();
+        for (TimeSlot ts : timeSlots){
+            tempTimeslots.add(ts.clone());
+        }
+        tempLessons = new ArrayList<>();
+        tempLessons.add(new Lesson(classTypes.get(1), courses.get(0), teachers.get(0), groups.get(6), rooms.get(0) ,tempTimeslots.get(1)));
+        tempLessons.add(new Lesson(classTypes.get(0), courses.get(1), teachers.get(1), groups.get(1), rooms.get(1) ,tempTimeslots.get(1)));
+        tempLessons.add(new Lesson(classTypes.get(0), courses.get(1), teachers.get(2), groups.get(3), rooms.get(3) ,tempTimeslots.get(1)));
+        tempTimeslots.get(1).setLessons(tempLessons);
+
+        content.add(tempTimeslots);
+        TimeTable table1 = new TimeTable(content);
+
+        TimeTableChecker.Result res = TimeTableChecker.checkWorkload(table1);
+
+        assertEquals(res.negativeScore, 0);
+    }
+
+    @org.junit.jupiter.api.Test
+    void checkWorkloadEval() throws CloneNotSupportedException{
+        List<List<TimeSlot>> content = new ArrayList<>();
+        List<TimeSlot> tempTimeslots = new ArrayList<>();
+        for (TimeSlot ts : timeSlots){
+            tempTimeslots.add(ts.clone());
+        }
+        List<Lesson> tempLessons = new ArrayList<>();
+        tempLessons.add(new Lesson(classTypes.get(0), courses.get(0), teachers.get(0), groups.get(0), rooms.get(0) ,tempTimeslots.get(0)));
+        tempLessons.add(new Lesson(classTypes.get(0), courses.get(1), teachers.get(1), groups.get(1), rooms.get(1) ,tempTimeslots.get(0)));
+        tempLessons.add(new Lesson(classTypes.get(0), courses.get(1), teachers.get(2), groups.get(2), rooms.get(2) ,tempTimeslots.get(0)));
+        tempTimeslots.get(0).setLessons(tempLessons);
+
+//        content = new ArrayList<>();
+        tempTimeslots = new ArrayList<>();
         for (TimeSlot ts : timeSlots){
             tempTimeslots.add(ts.clone());
         }
