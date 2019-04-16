@@ -14,7 +14,7 @@ class TimeTableCheckerTest {
     List<TimeSlot> timeSlots;
     List<CourseClassType> classTypes;
     List<Course> courses;
-//    algorithms.TimeTable table;
+//    algorithms.main.java.algorithms.TimeTable table;
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {

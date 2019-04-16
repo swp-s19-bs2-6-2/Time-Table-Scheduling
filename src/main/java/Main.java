@@ -35,7 +35,7 @@ public class Main {
         for(int i = 0; i<2; i++){
             availableTimeSlots.add(new algorithms.TimeSlot(i, 0, i + 1, 0, availableClassrooms));
         }
-        algorithms.TimeTable timeTable = new algorithms.TimeTable(availableTimeSlots, 5, availableLessons);
+        algorithms.main.java.algorithms.TimeTable timeTable = new algorithms.main.java.algorithms.TimeTable(availableTimeSlots, 5, availableLessons);
         timeTable.printTimeTable();*/
     }
 }
