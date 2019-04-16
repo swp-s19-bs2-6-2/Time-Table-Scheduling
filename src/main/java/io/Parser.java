@@ -18,12 +18,13 @@ public class Parser
     private static final String TIME_SLOTS_FILE_NAME = "TimeSlots.csv";
     private static final String TEACHERS_FILE_NAME = "Teachers.csv";
     private static final String LESSONS_FILE_NAME = "Lessons.csv";
+    private static final String WORKING_DAYS_FILE_NAME = "WorkingDays.csv";
 
-    static final String[] FILES = {STUDENTS_FILE_NAME, COURSES_FILE_NAME, CLASSROOMS_FILE_NAME,
-            TIME_SLOTS_FILE_NAME, TEACHERS_FILE_NAME, LESSONS_FILE_NAME};
+    private static final String[] FILES = {STUDENTS_FILE_NAME, COURSES_FILE_NAME, CLASSROOMS_FILE_NAME,
+            TIME_SLOTS_FILE_NAME, TEACHERS_FILE_NAME, LESSONS_FILE_NAME, WORKING_DAYS_FILE_NAME};
 
     //A bit of HARDCODING
-    private static Map<String, CourseClassType> TYPES = new HashMap<>();
+    private static final Map<String, CourseClassType> TYPES = new HashMap<>();
     static {
         TYPES.put("Lecture", new CourseClassType("Lecture", false));
         TYPES.put("Tutorial", new CourseClassType("Tutorial", false));
@@ -31,38 +32,27 @@ public class Parser
     }
 
 
-    //ToDo: remove output
     public TableResult parseAll(File WD) throws NotDirectoryException, FileNotFoundException, IncorrectFileStructureException {
         validate(WD);
-        Map<String, YearGroup> groups = parseGroups(new FileInputStream(WD.getPath() + File.separator + STUDENTS_FILE_NAME));
-        for (YearGroup g: groups.values())
-            System.out.println(g);
-        Map<String, NCourse> courses = parseCourses(new FileInputStream(WD.getPath() + File.separator + COURSES_FILE_NAME), groups);
-        for (NCourse c: courses.values())
-            System.out.println(c);
-        Map<Integer, Teacher> teachers = parseTeacher(new FileInputStream(WD.getPath() + File.separator + TEACHERS_FILE_NAME));
-        for (Teacher t: teachers.values())
-            System.out.println(t);
-        List<Lesson> lessons = parseLessons(new FileInputStream(WD.getPath() + File.separator + LESSONS_FILE_NAME),
-                courses, teachers);
-        for (Lesson l: lessons)
-            System.out.println(l);
+        int workingDays = parseWorkingDays(new FileInputStream(WD.getPath() + File.separator + WORKING_DAYS_FILE_NAME));
 
         List<Classroom> classRooms = parseClassRooms(new FileInputStream(WD.getPath() + File.separator + CLASSROOMS_FILE_NAME));
-        for (Classroom c: classRooms)
-            System.out.println(c);
         List<TimeSlot> ts = parseTimeSlots(new FileInputStream(WD.getPath() + File.separator + TIME_SLOTS_FILE_NAME), classRooms);
-        for (TimeSlot s: ts)
-            System.out.println(s);
 
-        return new TableResult(ts, lessons);
+        Map<String, YearGroup> groups = parseGroups(new FileInputStream(WD.getPath() + File.separator + STUDENTS_FILE_NAME));
+        Map<String, NCourse> courses = parseCourses(new FileInputStream(WD.getPath() + File.separator + COURSES_FILE_NAME), groups);
+        Map<Integer, Teacher> teachers = parseTeacher(new FileInputStream(WD.getPath() + File.separator + TEACHERS_FILE_NAME), workingDays, ts);
+        List<Lesson> lessons = parseLessons(new FileInputStream(WD.getPath() + File.separator + LESSONS_FILE_NAME),
+                courses, teachers);
+
+        return new TableResult(ts, lessons, workingDays);
     }
 
 
     /*All the parsing methods
     They take an Input stream and already parsed data and convert them into collection of needed objects
     */
-    List<Lesson> parseLessons(final InputStream file, final Map<String, NCourse> courses,
+    private List<Lesson> parseLessons(final InputStream file, final Map<String, NCourse> courses,
                               final Map<Integer, Teacher> teachers)
             throws IncorrectFileStructureException
     {
@@ -78,7 +68,7 @@ public class Parser
 
             for (int i = 1; i < line.length; i++) {
                 String[] st = line[i].split(":");
-                if (st.length != 2) throw new IncorrectFileStructureException(l, "algorithms.Lesson type - algorithms.Teacher pair shold be in form of [type:teacher_id]");
+                if (st.length != 2) throw new IncorrectFileStructureException(l, "algorithms.Lesson type - algorithms.Teacher pair should be in form of [type:teacher_id]");
                 if (!TYPES.containsKey(st[0])) throw new IncorrectFileStructureException(l, "There's no such course type as "+st[0]);
                 CourseClassType classType = TYPES.get(st[0]);
                 int teacherId;
@@ -109,7 +99,7 @@ public class Parser
 
 
 
-    Map<String, CourseClassType> parseClassTypes(final InputStream file) throws IncorrectFileStructureException{
+    private Map<String, CourseClassType> parseClassTypes(final InputStream file) throws IncorrectFileStructureException{
         final Map<String, CourseClassType> toRet = new HashMap<>();
         final List<String[]> lines = parse(file);
 
@@ -123,13 +113,13 @@ public class Parser
         return toRet;
     }
 
-    Map<Integer, Teacher> parseTeacher(final InputStream file) throws IncorrectFileStructureException{
+    private Map<Integer, Teacher> parseTeacher(final InputStream file, final int workingDays, final List<TimeSlot> slots) throws IncorrectFileStructureException{
         final Map<Integer, Teacher> toRet = new HashMap<>();
         final List<String[]> lines = parse(file);
 
         int l = 0;//for error
         for (String[] line: lines){
-            if (line.length != 2) throw new IncorrectFileStructureException(l, "Should be in form of [ID, Name]");
+            if (line.length < 2) throw new IncorrectFileStructureException(l, "Should be in form of [ID, Name{, preferred_day:preferred_slot, -\"\"-}]");
             int id;
             try {
                 id = Integer.parseInt(line[0]);
@@ -137,9 +127,25 @@ public class Parser
                 throw new IncorrectFileStructureException(l, "Id should be integer, but got "+line[0]);
             }
             if (toRet.containsKey(id)) throw new IncorrectFileStructureException(l, "There is already a teacher with id "+line[0]+".");
-            toRet.put(id, new Teacher(id, line[1]));
+            Teacher teacher = new Teacher(id, line[1]);
+            toRet.put(id, teacher);
 
-            //ToDo: preferences
+            for (int i = 2; i < line.length; i++) {
+                String[] st = line[i].split(":");
+                if (st.length != 2) throw new IncorrectFileStructureException(l, "(Preferred day - Preferred time slot) pair should be in form of [day:slot]");
+                int day, slot;
+                try{
+                    day = Integer.parseInt(st[0])-1;
+                    slot = Integer.parseInt(st[1])-1;
+                }catch (NumberFormatException e){
+                    throw new IncorrectFileStructureException(l, "Day and slot should be an integer");
+                }
+
+                if (day < 0 || day >= workingDays) throw new IncorrectFileStructureException(l, "Day is out of range");
+                if (slot < 0 || slot >= slots.size()) throw new IncorrectFileStructureException(l, "Slot is out of range");
+
+                teacher.addSingleTimeslot(day, slot);
+            }
 
             l++;
         }
@@ -147,7 +153,7 @@ public class Parser
     }
 
 
-    List<TimeSlot> parseTimeSlots(final InputStream file, final List<Classroom> availableClassrooms) throws IncorrectFileStructureException {
+    private List<TimeSlot> parseTimeSlots(final InputStream file, final List<Classroom> availableClassrooms) throws IncorrectFileStructureException {
         final List<String[]> lines = parse(file);
         final List<TimeSlot> slots = new ArrayList<>();
 
@@ -169,8 +175,8 @@ public class Parser
         return slots;
     }
 
-    List<Classroom> parseClassRooms(final InputStream ClassRoomsFile) throws IncorrectFileStructureException{
-        final List<String[]> lines = parse(ClassRoomsFile);
+    private List<Classroom> parseClassRooms(final InputStream classRoomsFile) throws IncorrectFileStructureException{
+        final List<String[]> lines = parse(classRoomsFile);
         final List<Classroom> classes = new ArrayList<>();
 
         int l = 0;//Line number for the exception
@@ -199,22 +205,36 @@ public class Parser
         return classes;
     }
 
-    Map<String, NCourse> parseCourses(final InputStream files, final Map<String, YearGroup> groups) throws IncorrectFileStructureException{
+    private Map<String, NCourse> parseCourses(final InputStream files, final Map<String, YearGroup> groups) throws IncorrectFileStructureException{
         final List<String[]> lines = parse(files);
 
         final Map<String, NCourse> toReturn = new HashMap<>();
         int ln = 0;//lines for error
         for (String[] line: lines){
-            if (line.length != 2) throw new IncorrectFileStructureException(ln, "Should be in form of [name, group]");
+            if (line.length != 2 && line.length != 5) throw new IncorrectFileStructureException(ln, "Should be in form of [name, group] or [name, group, lesson_type_1, lesson_type_2, lesson_type_3] for order");
             if (!groups.containsKey(line[1])) throw new IncorrectFileStructureException(ln, "Grade group "+line[1]+" does not exist.");
-            toReturn.put(line[0], new NCourse(new Course(line[0]), groups.get(line[1])));
+            Course course = new Course(line[0]);
+            toReturn.put(line[0], new NCourse(course, groups.get(line[1])));
+
+
+            if (line.length == 5){
+                List<CourseClassType> order = new ArrayList<>(3);
+                for (int i = 2; i < 5; i++){
+                    if (!TYPES.containsKey(line[i])) throw new IncorrectFileStructureException(ln, "There's no such type as "+line[i]);
+                    if (order.contains(TYPES.get(line[i]))) throw new IncorrectFileStructureException(ln, "There's already a "+line[i]+" in lessons order");
+                    order.add(TYPES.get(line[i]));
+                }
+                boolean result = course.setClassesOrder(order);
+                if (!result) throw new IncorrectFileStructureException(ln, "Course order doesn't correspond to Course lessons.");
+            }
+
+
             ln++;
         }
         return toReturn;
     }
 
-    Map<String, YearGroup> parseGroups(final InputStream studentsFile) throws IncorrectFileStructureException{
-        //ToDo: electives?
+    private Map<String, YearGroup> parseGroups(final InputStream studentsFile) throws IncorrectFileStructureException{
         final List<String[]> lines = parse(studentsFile);
         final int studentsNumber = lines.size();
 
@@ -224,7 +244,7 @@ public class Parser
         for (String[] line: lines){
             if (line.length != 3) throw new IncorrectFileStructureException(id, "Should be in form of [Name, BS, Group]");
 
-            final String name = line[0];
+            //final String name = line[0];
             final String grade = line[1];
             final String studentGroup = line[1]+"-"+line[2];
 
@@ -244,13 +264,26 @@ public class Parser
         return tr;
     }
 
+    private int parseWorkingDays(final InputStream file) throws IncorrectFileStructureException{
+        List<String[]> lines = parse(file);
+        if (lines.size() != 1) throw new IncorrectFileStructureException("Should be only one line containing only working days number");
+        if (lines.get(0).length != 1) throw new IncorrectFileStructureException("Should be only one line containing only working days number");
+        try{
+            int tr = Integer.parseInt(lines.get(0)[0]);
+            if (tr <= 0) throw new NumberFormatException();
+            return tr;
+        }catch (NumberFormatException e){
+            throw new IncorrectFileStructureException("Working days number should be a positive integer.");
+        }
+    }
+
 
     //Checks if the working directory us valid, throws Exceptions otherwise
-    void validate(final File WD) throws NotDirectoryException, FileNotFoundException{
-        if (!WD.exists()) throw new FileNotFoundException("Directory not found: "+WD.getAbsolutePath());
-        if (WD.isFile()) throw new NotDirectoryException(WD.getAbsolutePath()+" is not a directory.");
+    private void validate(final File workingDirectory) throws NotDirectoryException, FileNotFoundException{
+        if (!workingDirectory.exists()) throw new FileNotFoundException("Directory not found: "+workingDirectory.getAbsolutePath());
+        if (workingDirectory.isFile()) throw new NotDirectoryException(workingDirectory.getAbsolutePath()+" is not a directory.");
 
-        String[] fls = WD.list();
+        String[] fls = workingDirectory.list();
         fls = fls == null? new String[]{} : fls;
         final List<String> files = Arrays.asList(fls);
 
@@ -259,7 +292,7 @@ public class Parser
             if (!files.contains(f))
                 notFoundFiles.add(f);
         }
-        if(!notFoundFiles.isEmpty()) throw new FileNotFoundException("There are no files "+notFoundFiles+" in working directory "+WD.getAbsolutePath());
+        if(!notFoundFiles.isEmpty()) throw new FileNotFoundException("There are no files "+notFoundFiles+" in working directory "+workingDirectory.getAbsolutePath());
     }
 
 
@@ -297,9 +330,12 @@ public class Parser
     public class TableResult{
         private List<TimeSlot> timeSlots;
         private List<Lesson> lessons;
-        public TableResult(List<TimeSlot> timeSlots, List<Lesson> lessons) { this.timeSlots = timeSlots;this.lessons = lessons; }
+        private int workingDays;
+
+        public TableResult(List<TimeSlot> timeSlots, List<Lesson> lessons, int workingDays) { this.timeSlots = timeSlots;this.lessons = lessons; this.workingDays = workingDays;}
         public List<TimeSlot> getTimeSlots() { return timeSlots; }
         public List<Lesson> getLessons() { return lessons; }
+        public int getWorkingDays() { return workingDays; }
     }
 
     //algorithms.Course with group number
