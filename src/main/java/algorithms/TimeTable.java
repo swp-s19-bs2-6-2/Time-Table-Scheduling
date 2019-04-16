@@ -18,6 +18,7 @@ public class TimeTable {
 
     /**
      * Constructor needed for testing purposes
+     *
      * @param timeSlots
      */
     public TimeTable(List<List<TimeSlot>> timeSlots) {
@@ -27,8 +28,6 @@ public class TimeTable {
     public List<List<TimeSlot>> getTimeSlots() {
         return timeSlots;
     }
-
-    public int kek = 11;
 
     /**
      * finds possible schedules
@@ -65,41 +64,69 @@ public class TimeTable {
             return result;
         }
         // next lesson in queue
-        List<List<TimeSlot>> nextState_Added = new ArrayList<>(cloneState(currentState));
-        List<Lesson> nextAvailableLessons_Added = new ArrayList<>(cloneLessons(availableLessons));
-        int nextLessonId = nextAvailableLessons_Added.size() - 1;
-        Lesson lesson = nextAvailableLessons_Added.get(nextLessonId);
-        TimeSlot timeSlot = nextState_Added.get(currentDay).get(currentTimeSlotNumber);
-        // adds lesson to the current time slot
-        if (canAddLesson(timeSlot, lesson)) {
-            addLesson(timeSlot, lesson);
+        for (int nextLessonId = 0; nextLessonId < availableLessons.size(); nextLessonId++) {
+            List<List<TimeSlot>> nextState_Added = new ArrayList<>(cloneState(currentState));
+            List<Lesson> nextAvailableLessons_Added = new ArrayList<>(cloneLessons(availableLessons));
+            Lesson lesson = nextAvailableLessons_Added.get(nextLessonId);
+            TimeSlot timeSlot = nextState_Added.get(currentDay).get(currentTimeSlotNumber);
             nextAvailableLessons_Added.remove(nextLessonId);
-            List<List<List<TimeSlot>>> nextPossibleSchedules = go(nextState_Added, nextAvailableLessons_Added, currentDay, currentTimeSlotNumber, maxResults);
-            if (nextPossibleSchedules != null) {
-                for (int i = 0; i < nextPossibleSchedules.size(); i++) {
-                    if (result.size() < maxResults) result.add(nextPossibleSchedules.get(i));
+            // adds lesson to the current time slot
+            if (canAddLesson(timeSlot, lesson, nextAvailableLessons_Added, currentDay, currentTimeSlotNumber)) {
+                addLesson(timeSlot, lesson);
+                List<List<List<TimeSlot>>> nextPossibleSchedules = go(nextState_Added, nextAvailableLessons_Added, currentDay, currentTimeSlotNumber, maxResults);
+                if (nextPossibleSchedules != null) {
+                    for (int i = 0; i < nextPossibleSchedules.size(); i++) {
+                        if (result.size() < maxResults) result.add(nextPossibleSchedules.get(i));
+                        else break;
+                    }
                 }
+                if (result.size() == maxResults) return result;
             }
-            if (result.size() == maxResults) return result;
         }
         // goes forward without adding the lesson to the current time slot
         List<List<TimeSlot>> nextState_Continued = new ArrayList<>(currentState);
         List<Lesson> nextAvailableLessons_Continued = new ArrayList<>(availableLessons);
+
         currentTimeSlotNumber = (currentTimeSlotNumber + 1) % nextState_Continued.get(currentDay).size();
         currentDay = (currentTimeSlotNumber == 0 ? currentDay + 1 : currentDay);
         List<List<List<TimeSlot>>> nextPossibleSchedules = go(nextState_Continued, nextAvailableLessons_Continued, currentDay, currentTimeSlotNumber, maxResults);
+
         if (nextPossibleSchedules != null) {
             for (int i = 0; i < nextPossibleSchedules.size(); i++) {
                 if (result.size() < maxResults) result.add(nextPossibleSchedules.get(i));
+                else break;
             }
         }
         return result;
     }
 
 
-    private boolean canAddLesson(TimeSlot timeSlot, Lesson lesson) { // TODO: all possible conditions for adding the lesson to the current time slot
+    private boolean canAddLesson(TimeSlot timeSlot, Lesson lesson, List<Lesson> availableLessons, int day, int timeSlotNumber) { // TODO: all possible conditions for adding the lesson to the current time slot
         if (timeSlot.getAvailableClassrooms().size() <= timeSlot.getLessons().size()) {
             return false;
+        }
+        // is this time slot is good for the teacher
+        Teacher teacher = lesson.getAssignedTeacher();
+        if (!teacher.getPreferredTimeslots().containsKey(day) || !teacher.getPreferredTimeslots().get(day).contains(timeSlotNumber)) {
+            return false;
+        }
+        Course course = lesson.getCourse();
+        CourseClassType courseClassType = lesson.getCourseClassType();
+        for (int i = 0; i < course.getClassesOrder().size(); i++) {
+            if (courseClassType.name.equals(course.getClassesOrder().get(i).name)) {
+                break;
+            } else {
+                // if lesson which should be before still in the list of available lessons then it is incorrect schedule
+                boolean found = false;
+                for (int j = 0; j < availableLessons.size(); j++) {
+                    if (availableLessons.get(j).getCourse().courseName.equals(course.courseName) && availableLessons.get(j).getCourseClassType().name.equals(course.getClassesOrder().get(i).name)) {
+                        found = true;
+                    }
+                }
+                if (found == true) {
+                    return false;
+                }
+            }
         }
         for (int i = 0; i < timeSlot.getLessons().size(); i++) {
             if (intersectTeacherOrStudents(lesson, timeSlot.getLessons().get(i))) {
@@ -127,7 +154,7 @@ public class TimeTable {
 
     // chooses the best schedule from the provided list
     public List<List<TimeSlot>> chooseBest(List<List<List<TimeSlot>>> possilbeSchedules) {
-        if(possilbeSchedules==null || possilbeSchedules.size() == 0){
+        if (possilbeSchedules == null || possilbeSchedules.size() == 0) {
             return null;
         }
         int best = 0;
