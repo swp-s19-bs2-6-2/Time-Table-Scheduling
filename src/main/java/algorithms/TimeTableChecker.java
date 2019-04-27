@@ -6,7 +6,7 @@ public class TimeTableChecker {
     static private Map <Integer, String> collisionsProblemTypes;
     static private Map <Integer, String> workloadProblemTypes;
 
-    static Result checkForCollisions(TimeTable table){
+    static public Result checkForCollisions(TimeTable table){
         Result res = new Result();
         List<List<TimeSlot>> tableSlots = table.getTimeSlots();
         List<String> problemDescription = new ArrayList<>();
@@ -78,7 +78,7 @@ public class TimeTableChecker {
         return res;
     }
 
-    static Result checkWorkload(TimeTable table){
+    static public Result checkWorkload(TimeTable table){
         Result res = new Result();
         List<List<TimeSlot>> tableSlots = table.getTimeSlots();
         List<String> problemDescription = new ArrayList<>();
