@@ -21,6 +21,12 @@ pipeline {
                 }
             }
         }
+        stage('Stop server') {
+             steps {
+                 sh 'chmod +x ./scripts/stopServer.sh'
+                 sh './scripts/stopServer.sh'
+             }
+         }
         stage('Deliver') {
              steps {
                  sh 'chmod +x ./scripts/deliver.sh'
