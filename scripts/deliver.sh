@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-echo 'Stop running server first'
-pid=$(lsof -i:5000 -t); if [ "$(expr length "$pid")" -ne "0" ]; then
-kill -TERM $pid || kill -KILL $pid
-fi
-
 echo 'The following Maven command installs your Maven-built Java application'
 echo 'into the local Maven repository, which will ultimately be stored in'
 echo 'Jenkins''s local Maven repository (and the "maven-repository" Docker data'
