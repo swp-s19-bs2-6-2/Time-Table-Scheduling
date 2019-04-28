@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+echo 'Stop running server first'
+pid=$(lsof -i:5000 -t); if [ "$(expr length "$pid")" -ne "0" ]; then
+kill -TERM $pid || kill -KILL $pid
+fi
+
 echo 'The following Maven command installs your Maven-built Java application'
 echo 'into the local Maven repository, which will ultimately be stored in'
 echo 'Jenkins''s local Maven repository (and the "maven-repository" Docker data'
@@ -16,4 +21,5 @@ VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[^\[]"`
 
 echo 'The following command runs and outputs the execution of your Java'
 echo 'application (which Jenkins built using Maven) to the Jenkins UI.'
-java -jar target/${NAME}-${VERSION}.jar
+export BUILD_ID=dontKillMe
+nohup java -jar target/${NAME}-${VERSION}.jar --server.port=5000 &
