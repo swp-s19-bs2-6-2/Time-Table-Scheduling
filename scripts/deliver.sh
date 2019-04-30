@@ -4,7 +4,7 @@ echo 'The following Maven command installs your Maven-built Java application'
 echo 'into the local Maven repository, which will ultimately be stored in'
 echo 'Jenkins''s local Maven repository (and the "maven-repository" Docker data'
 echo 'volume).'
-mvn jar:jar install:install help:evaluate -Dexpression=project.name
+mvn install help:evaluate -Dexpression=project.name
 
 echo 'The following complex command extracts the value of the <name/> element'
 echo 'within <project/> of your Java/Maven project''s "pom.xml" file.'
