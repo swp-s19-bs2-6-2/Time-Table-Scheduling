@@ -23,8 +23,7 @@ pipeline {
         }
         stage('Stop server') {
                      steps {
-                         sh 'chmod +x ./scripts/stopServer.sh'
-                         sh './scripts/stopServer.sh'
+                         sh "pid=\$(lsof -i:8989 -t); kill -TERM \$pid || kill -KILL \$pid"
                      }
                  }
         stage('Deliver') {

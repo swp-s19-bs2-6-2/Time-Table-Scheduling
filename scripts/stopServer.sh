@@ -5,3 +5,7 @@ pid=$(lsof -i:8081 -t); if [[ "$(expr length "$pid")" -ne "0" ]]; then
 kill -KILL $pid; else
 echo 'No running server found'
 fi
+
+
+#                         sh 'chmod +x ./scripts/stopServer.sh'
+#                         sh './scripts/stopServer.sh'
