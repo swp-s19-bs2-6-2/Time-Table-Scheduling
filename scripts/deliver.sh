@@ -16,4 +16,4 @@ VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[^\[]"`
 
 echo 'The following command runs and outputs the execution of your Java'
 echo 'application (which Jenkins built using Maven) to the Jenkins UI.'
-BUILD_ID=dontKillMe nohup java -jar target/${NAME}-${VERSION}.jar --server.port=8081 &
+BUILD_ID=dontKillMe nohup java -jar target/${NAME}-${VERSION}.jar --server.port=8081 & echo $! > ~/server_pid.txt
