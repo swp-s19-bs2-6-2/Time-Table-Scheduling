@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Stop server') {
                      steps {
-                         sh "pid=\$(lsof -i:8989 -t); kill -TERM \$pid || kill -KILL \$pid"
+                         sh "pid=\$(lsof -i:8081 -t); kill -TERM \$pid || kill -KILL \$pid"
                      }
                  }
         stage('Deliver') {
